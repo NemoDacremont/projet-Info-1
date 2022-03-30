@@ -1,5 +1,5 @@
 
-def test(filename):
+def poly(filename):
 	"""
 		Entrée: - filename: string
 		Retourne: None
