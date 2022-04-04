@@ -1,12 +1,11 @@
 
-const { sauvegarde_fichier } = require("./manipulation_fichier");
-
-
+const { data_dir } = require("../config.json");
+const manipulation_fichier = require("./manipulation_fichier");
 
 module.exports = {
 	// Selectionne la requête
-	requete: "POST",
-	route: "sauvegarde",
+	method: "POST",
+	route: "/sauvegarde",
 
 	// 
 	handler: (req, res) => {
@@ -18,9 +17,9 @@ module.exports = {
 		});
 
 
-		req.on("end", () => {
+		req.on("end", async () => {
 			const text = data.join("");
-			await sauvegarde_fichier(text);
+			await manipulation_fichier.sauvegarde(data_dir, text);
 
 			res.writeHead(200);
 			res.end();
