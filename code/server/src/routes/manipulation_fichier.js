@@ -3,12 +3,14 @@ const fs = require("fs");
 const path = require("path");
 
 // Permet juste de créer un fichier zip avec tout les fichier data
-const childa = require("child_process")
+const child_process = require("child_process")
 
 
 function dossier_existe(chemin) {
+	console.log("chemin:", chemin);
 	return new Promise((res, rej) => {
 		fs.access(chemin, (err) => {
+			console.log("err:", err);
 			if (err) res(false);
 
 			res(true);
@@ -43,15 +45,15 @@ async function sauvegarde(chemin_data, data) {
 	*/
 
 	// Si le dossier n'existe pas, on ne peut pas sauvegarder
-	if (!await dossier_existe(chemin_data)) {
-		throw new error("Le dossier de sauvegarde n'existe pas");
+	const chemin = path.join(__dirname, chemin_data);
+	if (!await dossier_existe(chemin)) {
+		throw new Error("Le dossier de sauvegarde n'existe pas");
 	}
 
 	const nom_fichier = cree_nom_fichier();
 	const chemin_sauvegarde = path.join(__dirname, chemin_data, nom_fichier);
 
 	await fs.writeFile(chemin_sauvegarde, data, (err) => {
-		console.log(err);
 		if (err) {
 			throw err;
 		}
@@ -61,16 +63,38 @@ async function sauvegarde(chemin_data, data) {
 }
 
 
-async function cree_zip(chemin_sauvegarde) {
+function cree_zip(chemin_sauvegarde) {
 	/*
-		TODO: crée un fichier zip de façon asynchrone
+		crée un fichier zip de façon asynchrone
 		avec un child process, puis retourne le nom du fichier
 	*/
-	const filename = "tmp.zip";
+	// Ne fonctionne pas si le chemin de sauvegarde est absolu
+	//const chemin_sauvegarde1 = path.join(__dirname, chemin_sauvegarde);
+
 	const chemin = path.join(__dirname, chemin_sauvegarde);
 
+	const nom_fichier_zip = "tmp.zip";
+	const chemin_zip = path.join(__dirname, nom_fichier_zip);
 
-	return filename;
+	return new Promise((res, rej) => {
+		const zip_process = child_process.spawn("tar.exe", ["-caf", chemin_zip, chemin])
+
+		zip_process.on("error", (err) => {
+			throw err;
+		});
+
+		zip_process.on("exit", (code) => {
+			console.log("process exit, code:,", code);
+		});
+
+		zip_process.on("stdout", (chunk) => {
+			console.log(chunk);
+		});
+
+		zip_process.on("close", (code) => {
+			res({code, chemin_zip});
+		});
+	});
 }
 
 module.exports = {
