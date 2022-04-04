@@ -95,12 +95,12 @@ def salomon(S, n=5):
 	return L
 
 
-def g_salomon(S,t = 5):
+def data_salomon(S,t = 5):
 	"""Découpe la liste selon les espaces et les temps"""
 	L = []
 	a = ""
 	for i in range(len(S)):
-		print("i =", i,"len =", len(S))
+		#print("i =", i,"len =", len(S))
 		if i <= len(S):
 			while S[i][0] != 'space' or S[i][1] < t:
 				if S[i] == S[-1]:
@@ -109,11 +109,49 @@ def g_salomon(S,t = 5):
 					break
 				a += S[i][0]
 				S.pop(i)
-				print(S)
+				#print(S)
 			if a != "":
 				L.append(a)
 			a = ""
 		elif i > len(S):
 			return L
 
-print(g_salomon(parse_CSV("data.csv", "utf16")))
+def rover(L,M):
+	S = []
+	c = 0
+	for word in L:
+		print("word =",word)
+		for k in range(len(M)//len(word)):
+			print("k =",k)
+			for i in range(len(word)):
+				print("i =",i)
+				if word[i] == M[k*len(word)+i]:
+					c = c+1
+		S.append([word,c])
+		c = 0
+	return S
+
+def rover_mk2(L,M):
+	S = []
+	c = 0
+	d = 0
+	for word in L:
+		#print("word =",word)
+		for k in range(len(M)-len(word)):
+			#print("k =",k)
+			for i in range(len(word)):
+				#print("i =",i,"word =",word[i],"Mword =",M[k+i])
+				if word[i] == M[k+i]:
+					c = c+1
+					#print("######## C = ############",c)
+					if c == len(word):
+						d = d+1
+						c = 0
+						#print("@@@@@@@@@ D = @@@@@@@@@@@@",d)
+			c = 0
+		S.append([word,d])
+		c = 0
+		d = 0
+	return S
+
+print(data_salomon(parse_CSV("data.csv", "utf16")))
