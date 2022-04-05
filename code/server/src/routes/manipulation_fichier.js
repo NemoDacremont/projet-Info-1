@@ -65,11 +65,13 @@ async function sauvegarde(chemin_data, data) {
 
 function cree_zip(chemin_sauvegarde) {
 	/*
+		Entrée: -chemin_sauvegarde
+		Retourne le nom du fichier
+
+		Note: il est nécessaire d'avoir le programme zip d'installé
 		crée un fichier zip de façon asynchrone
 		avec un child process, puis retourne le nom du fichier
 	*/
-	// Ne fonctionne pas si le chemin de sauvegarde est absolu
-	//const chemin_sauvegarde1 = path.join(__dirname, chemin_sauvegarde);
 
 	const chemin = path.join(__dirname, chemin_sauvegarde);
 
