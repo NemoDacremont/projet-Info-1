@@ -77,7 +77,7 @@ function cree_zip(chemin_sauvegarde) {
 	const chemin_zip = path.join(__dirname, nom_fichier_zip);
 
 	return new Promise((res, rej) => {
-		const zip_process = child_process.spawn("tar.exe", ["-caf", chemin_zip, chemin])
+		const zip_process = child_process.spawn("zip", ["-r", chemin_zip, chemin])
 
 		zip_process.on("error", (err) => {
 			throw err;
