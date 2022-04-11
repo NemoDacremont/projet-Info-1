@@ -86,7 +86,7 @@ def TriInsertion(l) :
 
 #Tri Fusion
 
-def fusion(L) :
+def fusion(L, poids = False) :
     
     def merge(l, m): #Sous programme fusionnant deux listes triées
         n = len(l) + len(m)
@@ -94,22 +94,43 @@ def fusion(L) :
         b = 0
         i = 0
         X = [0 for i in range(n)]
-        while i < n and a < len(l) and b < len(m) : #Boucle de tri
-            if l[a] <= m[b] and a < len(l) :
-                X[i] = l[a]
-                a += 1
-            else :
-                X[i] = m[b]
-                b += 1
-            i += 1
-        if a == len(l) and b < len(m) :
-            for j in range(i, n) :
-                X[j] = m[b]
-                b += 1
-        if b == len(m) and a < len(l) :
-            for j in range(i, n) :
-                X[j] = l[a]
-                a += 1
+        
+        if type(poids) == int :
+            while i < n and a < len(l) and b < len(m) : #Boucle de tri
+                if l[a][poids] <= m[b][poids] and a < len(l) :
+                    X[i] = l[a]
+                    a += 1
+                else :
+                    X[i] = m[b]
+                    b += 1
+                i += 1
+            if a == len(l) and b < len(m) :
+                for j in range(i, n) :
+                    X[j] = m[b]
+                    b += 1
+            if b == len(m) and a < len(l) :
+                for j in range(i, n) :
+                    X[j] = l[a]
+                    a += 1
+        
+        else :
+            while i < n and a < len(l) and b < len(m) : #Boucle de tri
+                if l[a] <= m[b] and a < len(l) :
+                    X[i] = l[a]
+                    a += 1
+                else :
+                    X[i] = m[b]
+                    b += 1
+                i += 1
+            if a == len(l) and b < len(m) :
+                for j in range(i, n) :
+                    X[j] = m[b]
+                    b += 1
+            if b == len(m) and a < len(l) :
+                for j in range(i, n) :
+                    X[j] = l[a]
+                    a += 1
+                    
         return(X)
     
     def forge(l, m) : #Algorithmes récursif de tri
@@ -136,6 +157,7 @@ def fusion(L) :
 C = [1, 2, 3, 4, 5]
 D = [5, 4, 3, 2 ,1]
 F = [1, 3, 2, 4, 5]
+K = [['a', 1], ['c', 3], ['b', 2], ['d', 4]]
 
 def R(n) : #Création d'une liste aléatoire de longueur n
     return [rd.randint(0, n) for i in range(n)]

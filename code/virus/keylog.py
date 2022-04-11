@@ -47,6 +47,6 @@ while True :
                csv.write('AFK,' + str(real_time - afk_time) + '\n')
             afk_time = time()
 
-    with open('/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/data.csv', 'w') as csv :
-               csv.write('')
-    del_time = time()
+    # with open('/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/data.csv', 'w') as csv :
+    #            csv.write('')
+    # del_time = time()
