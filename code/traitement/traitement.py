@@ -50,7 +50,8 @@ print(parse_CSV("data.csv", "utf16")) # Wow ça marche
 
 
 def find_s(a, S):
-	"""Trouve le string a dans le string S"""
+	"""écrit par Daniel
+	Trouve le string a dans le string S"""
 	for i in range(len(S)):
 		if S[i] == a[0]:
 			for k in range(len(a)):
@@ -67,7 +68,8 @@ T = "Greetings stranger, fortuned fellow, Tis a party for which I bellow. I invi
 
 
 def find_U(a, S):
-	"""Trouve un string a dans une liste de string S"""
+	"""écrit par Daniel
+	Trouve un string a dans une liste de string S"""
 	L = []
 	for k in range(len(S)):
 		for i in range(len(S[k])):
@@ -79,7 +81,8 @@ def find_U(a, S):
 
 
 def salomon(S, n=5):
-	"""Découpe la liste S en liste de listes L de n éléments"""
+	"""écrit par Daniel
+	Découpe la liste S en liste de listes L de n éléments"""
 	L = []
 	for i in range((len(S) // n) + 1):
 		L.append([])
@@ -96,7 +99,8 @@ def salomon(S, n=5):
 
 
 def data_salomon(S,t = 5):
-	"""Découpe la liste selon les espaces et les temps"""
+	"""écrit par Daniel
+	Découpe la liste selon les espaces et les temps"""
 	L = []
 	a = ""
 	for i in range(len(S)):
@@ -132,6 +136,8 @@ def rover(L,M):
 	return S
 
 def rover_mk2(L,M):
+	"""écrit par Daniel
+	L est une liste de string et M est un string"""
 	S = []
 	c = 0
 	d = 0
@@ -154,4 +160,8 @@ def rover_mk2(L,M):
 		d = 0
 	return S
 
-print(data_salomon(parse_CSV("data.csv", "utf16")))
+#print(data_salomon(parse_CSV("data.csv", "utf16")))
+print(rover_mk2(["Yhtil","King"],T))
+
+def tri_fusion(L):
+	
