@@ -42,10 +42,10 @@ while True :
            with open('/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/data.csv', 'a') as csv :
                csv.write(str(item[0]) + ',' + str(item[1]) + '\n')
 
-        if abs(afk_time - real_time) > 10 :
-            with open('/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/data.csv', 'a') as csv :
-               csv.write('AFK,' + str(real_time - afk_time) + '\n')
-            afk_time = time()
+        # if abs(afk_time - real_time) > 10 :
+        #     with open('/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/data.csv', 'a') as csv :
+        #        csv.write('AFK,' + str(real_time - afk_time) + '\n')
+        #     afk_time = time()
 
     # with open('/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/data.csv', 'w') as csv :
     #            csv.write('')
