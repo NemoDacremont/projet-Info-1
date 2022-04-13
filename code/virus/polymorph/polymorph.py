@@ -1,4 +1,6 @@
 
+
+
 def poly(filename):
 	"""
 		Entrée: - filename: string
@@ -8,4 +10,7 @@ def poly(filename):
 
 		Marche pas trop pour le moment :/
 	"""
-	print("bonjour!")
+
+	instructions = []
+	
+

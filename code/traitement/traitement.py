@@ -34,7 +34,7 @@ def parse_CSV(chemin, encodage="utf8"):
 
 		# Teste si le premier caractère du second string est
 		# un nombre, permet de passer le cas du header
-		if ord(raw[1][1]) < 48 or ord(raw[1][1]) > 57:
+		if ord(raw[1][1]) < 46 or ord(raw[1][1]) > 57:
 			continue
 
 		# Il faut retirer le caractère \n pour convertir
@@ -46,5 +46,4 @@ def parse_CSV(chemin, encodage="utf8"):
 	fichier.close()
 	return data
 
-print(parse_CSV("data.csv", "utf16")) # Wow ça marche
-
+data = parse_CSV("data.csv", "utf16") # Wow ça marche

@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+## CUSTOM
+# Parties de test
+code/server/src/routes/test1/
+code/server/src/routes/tmp.zip
+code/virus/sauvegarde_locale.csv
