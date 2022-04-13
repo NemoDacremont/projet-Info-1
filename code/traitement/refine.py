@@ -9,7 +9,8 @@ data_prime =() #Un tuple qui contient les données extraites du keylog
 #Dictionnaire de transfert
 dict_str = {'space' : ' ', '\;' : ',', 'AFK' : '\\'}
 dict_maj = {'a' : 'A', 'b' : 'B', 'c' : 'C', 'd' : 'D', 'e' : 'E', 'f' : 'F', 'g' : 'G', 'h' : 'H', 'i' : 'I', 'j' : 'J', 'k' : 'K', 'l' : 'L', 'm' : 'M', 'n' : 'N', 'o' : 'O', 'p' : 'P', 'q' : 'Q', 'r' : 'R', 's' : 'S', 't' : 'T', 'u' : 'U', 'v' : 'V', 'w' : 'W', 'x' : 'X', 'y' : 'Y', 'z' : 'Z'}
-list_delete = ['sapce', 'ctrl', 'shift', 'delete', 'AFK']
+list_delete = ['space', 'ctrl', 'shift', 'delete', 'AFK', 'verr.maj']
+list_butcher = ['space', 'ctrl', 'shift', 'delete', 'AFK', 'verr.maj', 'left', 'right', 'up', 'down']
 def ouvre_fichier(chemin = path, encodage="utf8"): ##Ecrit par Némo, relu par Anaël
 	"""Entrée: - chemin: string, chemin vers le fichier à ouvrir
 	Retourne: objet File, fichier ouvert
@@ -142,18 +143,29 @@ def fine(S : list, shift = False) :
     #Evite de modifier la liste mère (optionnel)
     L = []
     n = len(S)
+    verr_maj = False #Booléen qui détecte si la majuscule est verrouillée
     #Transtypage en liste pour la manipulation
     for i in range(n) :
         L.append(list(S[i]))
         
     I = [] #Liste d'indies à retirer
     for i in range(n) :
+        #Modifier l'état majuscule verrouillée
+        if L[i][0] == 'verr.maj' :
+            if verr_maj :
+                verr_maj = False
+            else :
+                verr_maj = True
+            I.append(i)
+        #Traitement des caractères spéciaux
         if L[i][0] in dict_str :
             L[i][0] = dict_str[L[i][0]]
-        if shift and S[i][0] == 'shift' and i != len(S) - 1 :
+        #Traitement des majuscules
+        if shift and ((S[i][0] == 'shift') != verr_maj) and i != len(S) - 1 :
             if L[i + 1][0] in dict_maj :
                 L[i + 1][0] = dict_maj[L[i + 1][0]]
-                I.append(i)
+                if not verr_maj :
+                    I.append(i)
     
     #Supprimer les caractères indésirables
     for i in range(1, len(I) + 1) :
@@ -184,7 +196,7 @@ def fine_backspace(S : list):
             I.append(i)
             j = 1
             while j < i :
-                if i - j not in I :
+                if i - j not in I and L[i - j][0] not in list_delete :
                     I.append(i - j)
                     break
                 j += -1
@@ -199,6 +211,25 @@ def fine_backspace(S : list):
             
     return L
 
+def butcher_cut(S : list) :
+    """
+    
+
+    Fonction de traitement final et radical, à n'utiliser qu'en dernier recours.
+    Prend en argument une liste de tuple de format simillaire aux données extraites.
+    Coupe tous les caractères parasites qui n'ont pas pu être traités'
+
+    """
+    
+    L = S.copy()
+    I = [] #Liste d'indices à retirer
+    for i in range(len(S)) :
+        if L[i][0] in list_butcher :
+            I.append(i)
+    for i in range(1, len(I) + 1) :
+        L.pop(I[-1 * i])
+    
+    return L
     
         
 
