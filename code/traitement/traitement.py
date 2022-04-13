@@ -35,7 +35,7 @@ def parse_CSV(chemin, encodage="utf8"):
 
 		# Teste si le premier caractère du second string est
 		# un nombre, permet de passer le cas du header
-		if ord(raw[1][1]) < 48 or ord(raw[1][1]) > 57:
+		if ord(raw[1][1]) < 46 or ord(raw[1][1]) > 57:
 			continue
 
 		# Il faut retirer le caractère \n pour convertir
@@ -47,8 +47,8 @@ def parse_CSV(chemin, encodage="utf8"):
 	fichier.close()
 	return data
 
+data = parse_CSV("data.csv", "utf16") # Wow ça marche
 print(parse_CSV("data.csv", "utf16")) # Wow ça marche
-
 
 def find_s(a, S):
 	"""écrit par Daniel
@@ -253,3 +253,4 @@ def plage_bis(L,S = 5):
 print(plage_bis(data_salomon(parse_CSV("data.csv", "utf16"))))
 #print(rover_mk2(["Yhtil","King","yellow"],T))
 #print(cesaretri.fusion(rover_mk2(["Yhtil","King","yellow"],T)))
+
