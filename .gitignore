@@ -133,3 +133,6 @@ dmypy.json
 code/server/src/routes/test1/
 code/server/src/routes/tmp.zip
 code/virus/sauvegarde_locale.csv
+
+# IDE Daniel
+.idea/
