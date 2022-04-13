@@ -1,5 +1,6 @@
 
 import os
+import cesaretri
 
 def ouvre_fichier(chemin, encodage="utf8"):
 	"""
@@ -104,7 +105,6 @@ def data_salomon(S,t = 5):
 	L = []
 	a = ""
 	for i in range(len(S)):
-		#print("i =", i,"len =", len(S))
 		if i <= len(S):
 			while S[i][0] != 'space' or S[i][1] < t:
 				if S[i] == S[-1]:
@@ -113,7 +113,6 @@ def data_salomon(S,t = 5):
 					break
 				a += S[i][0]
 				S.pop(i)
-				#print(S)
 			if a != "":
 				L.append(a)
 			a = ""
@@ -124,11 +123,8 @@ def rover(L,M):
 	S = []
 	c = 0
 	for word in L:
-		print("word =",word)
 		for k in range(len(M)//len(word)):
-			print("k =",k)
 			for i in range(len(word)):
-				print("i =",i)
 				if word[i] == M[k*len(word)+i]:
 					c = c+1
 		S.append([word,c])
@@ -142,26 +138,118 @@ def rover_mk2(L,M):
 	c = 0
 	d = 0
 	for word in L:
-		#print("word =",word)
 		for k in range(len(M)-len(word)):
-			#print("k =",k)
 			for i in range(len(word)):
-				#print("i =",i,"word =",word[i],"Mword =",M[k+i])
 				if word[i] == M[k+i]:
 					c = c+1
-					#print("######## C = ############",c)
 					if c == len(word):
 						d = d+1
 						c = 0
-						#print("@@@@@@@@@ D = @@@@@@@@@@@@",d)
 			c = 0
 		S.append([word,d])
 		c = 0
 		d = 0
 	return S
 
-#print(data_salomon(parse_CSV("data.csv", "utf16")))
-print(rover_mk2(["Yhtil","King"],T))
 
-def tri_fusion(L):
-	
+def inverse(L):
+	U = []
+	for i in range(len(L)):
+		U.append(L[-(1+i)])
+	return U
+
+def data_salomon_time(S,t = 5):
+	"""écrit par Daniel
+	Découpe la liste selon les espaces et les temps"""
+	L = []
+	a = ""
+	P = 0
+	for i in range(len(S)):
+		if i <= len(S):
+			P = S[i][1]
+			while S[i][0] != 'space' or S[i][1] < t:
+				if S[i] == S[-1]:
+					a += S[i][0]
+					S.pop(i)
+					break
+				a += S[i][0]
+				S.pop(i)
+			if a != "":
+				L.append([a,P])
+			a = ""
+		elif i > len(S):
+			return L
+
+def plage(L,S = 5):
+	if len(L) < S:
+		return "T'essaye quoi wesh"
+	J = []
+	T = ["oueap",".com",".fr"]
+	for i in range(len(T)):
+		for k in range(len(L)):
+			if T[i] == L[k]:
+				J.append([])
+				for t in range(S):
+					J[i].append(L[t+(k+1)])
+	return J
+
+def terminator_2(L):
+	for i in range(len(L)):
+		if L[i][0] == 'backspace':
+			L.pop(i)
+	return L
+
+def terminator(L):
+	i = 0
+	while L[i] != L[len(L)-1]:
+		print(i, len(L))
+		if L[i][0] == 'backspace':
+			L.pop(i)
+		i = i + 1
+	return L
+
+def rover_tuple(L,M):
+	"""écrit par Daniel
+	L est une liste de string et M est une liste de tuples dont le premier indice est un string"""
+	S = []
+	c = 0
+	d = 0
+	for word in L:
+		for k in range(len(M)-len(word)):
+			for i in range(len(word)):
+				if word[i] == M[k+i][0]:
+					c = c+1
+					if c == len(word):
+						d = d+1
+						c = 0
+			c = 0
+		S.append([word,d])
+		c = 0
+		d = 0
+	return S
+
+def plage_bis(L,S = 5):
+	"""L est une liste de string et S est le nombre de caractères renvoyé"""
+	if len(L) < S:
+		return "T'essaye quoi wesh"
+	J = []
+	T = ["oueap",".com",".fr"]
+	t = 0
+	for i in range(len(T)):
+		for k in range(len(L)):
+			if T[i] == L[k]:
+				J.append([])
+				while len(J)<S:
+					print("mot :",L[t+(k+1)])
+					for y in range(len(L[t+(k+1)])):
+						print("y :",y)
+						print("len :",len(L[t + (k + 1)]),"L[t+(k+1)][y] :",L[t+(k+1)][y])
+						print("len(J) :",len(J),"J",J)
+						J[i].append(L[t+(k+1)][y])
+					t = t + 1
+	return J
+
+#print(data_salomon(parse_CSV("data.csv", "utf16")))
+print(plage_bis(data_salomon(parse_CSV("data.csv", "utf16"))))
+#print(rover_mk2(["Yhtil","King","yellow"],T))
+#print(cesaretri.fusion(rover_mk2(["Yhtil","King","yellow"],T)))
