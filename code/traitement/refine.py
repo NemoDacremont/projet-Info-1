@@ -8,9 +8,14 @@ path = ''
 data_prime =() #Un tuple qui contient les données extraites du keylog
 #Dictionnaire de transfert
 dict_str = {'space' : ' ', '\;' : ',', 'AFK' : '\\'}
-dict_maj = {'a' : 'A', 'b' : 'B', 'c' : 'C', 'd' : 'D', 'e' : 'E', 'f' : 'F', 'g' : 'G', 'h' : 'H', 'i' : 'I', 'j' : 'J', 'k' : 'K', 'l' : 'L', 'm' : 'M', 'n' : 'N', 'o' : 'O', 'p' : 'P', 'q' : 'Q', 'r' : 'R', 's' : 'S', 't' : 'T', 'u' : 'U', 'v' : 'V', 'w' : 'W', 'x' : 'X', 'y' : 'Y', 'z' : 'Z'}
-list_delete = ['space', 'ctrl', 'shift', 'delete', 'AFK', 'verr.maj']
-list_butcher = ['space', 'ctrl', 'shift', 'delete', 'AFK', 'verr.maj', 'left', 'right', 'up', 'down']
+dict_maj = {'a' : 'A', 'b' : 'B', 'c' : 'C', 'd' : 'D', 'e' : 'E', 'f' : 'F', 'g' : 'G', 'h' : 'H', 'i' : 'I', 'j' : 'J', 'k' : 'K', 'l' : 'L', 'm' : 'M', 'n' : 'N', 'o' : 'O', 'p' : 'P', 'q' : 'Q', 'r' : 'R', 's' : 'S', 't' : 'T', 'u' : 'U', 'v' : 'V', 'w' : 'W', 'x' : 'X', 'y' : 'Y', 'z' : 'Z', '<' : '>', '^' : '¨', ',' : '?', ';' : '.', ':' : '/', '!' : '§', 'ù' : '%', '$' : '€', '*' : 'µ', '&' : '1', 'é' : '2', '\g' : '3', '\a' : "4", '(' : '5', '-' : '7', 'è' : '7', '_' : '8', 'ç' : '9', 'à' : '0', ')' : '°', '=' : '+'}
+dict_alt = {'é' : '~', '\g' : '#', '\a' : '{', '(' : '[' ,'-' : '|', 'è' : '`', '_' : '//', 'à' : '@', ')' : ']', '=' : '}', 'e' : '€'}
+#dict_acc_a = {'a' : 'á', 'A' : 'Á', 'e' : 'é', 'E' : 'É', 'i' : 'í', 'I' : 'Í', 'o' : 'ó', 'O' : 'Ó'}
+dict_acc_g = {'a' : 'à', 'e' : 'è', 'u' : 'ù'}
+dict_trem = {'a' : 'ä', 'e' : 'ë', 'i' : 'ï', 'o' : 'ö', 'u' : 'ü', 'y' : 'ÿ', 'A' : 'Ä', 'E' : 'Ë', 'I' : 'Ï', 'O' : 'Ö', 'U' : 'Ü', 'Y' : 'Ÿ'}
+dict_circ = {'a' : 'â', 'e' : 'ê', 'i' : 'î', 'o' : 'ô', 'u' : 'û', 'A' : 'Â', 'E' : 'Ê', 'I' : 'Î', 'O' : 'Ô', 'U' : 'Û'}
+list_delete = ['space', 'ctrl', 'shift', 'alt', 'delete', 'AFK', 'verr.maj', 'tab', 'left', 'right', 'up', 'down']
+list_butcher = ['space', 'ctrl', 'shift', 'delete', 'alt', 'AFK', 'verr.maj', 'left', 'right', 'up', 'down']
 def ouvre_fichier(chemin = path, encodage="utf8"): ##Ecrit par Némo, relu par Anaël
 	"""Entrée: - chemin: string, chemin vers le fichier à ouvrir
 	Retourne: objet File, fichier ouvert
@@ -19,8 +24,29 @@ def ouvre_fichier(chemin = path, encodage="utf8"): ##Ecrit par Némo, relu par A
 		return open(chemin, "r", encoding=encodage)
 
 	raise ValueError("file doesn't exists")
+def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement. Ecrit par Anaël
+    """
     
-def parse_CSV(chemin, encodage="utf8"):
+    Voici une liste des fonctions utiles. Pour recevoir une description détaillée de chacune, utilise 'help()'
+    Un numéro a été ajouté entre parenthèses : il indique l'ordre dans lequel exécuter celles-ci pour un traitement optimal
+    Ne pas respecter l'ordre a de fortes chances de conduire à des conflits, toutefois, il peut parfois être nécessaire d'éviter certains traitements.
+    
+    setpath (1)
+    fine (2)
+    fine_accent (3)
+    fine_backspace (4)
+    butcher_cut (5)
+    separate (*)
+    save (*)
+    
+    Les fonctions marquées d'une étoile peuvent être exécutées n'importe quand
+
+    """
+    
+    print('tapez help(tutoriel)')
+    
+    
+def parse_CSV(chemin, encodage="utf8"): #Ecrit par Némo, relu par Anaël
 	"""
 		Entrée: - chemin: string, chemin vers le fichier à ouvrir,
 							le fichier doit être au format CSV
@@ -73,7 +99,7 @@ def setpath(p : str, ex = True) : #Ecrit par Anaël, relu par Némo
         global data_prime
         data_prime = parse_CSV(path + '/data.csv')
         
-def separate(S = data_prime, types = tuple, assamble = False, create = False, name = 'extracted_data') : #Ecrit par Anaël 
+def separate(S = data_prime, types = tuple, assamble = False, create = False, name = 'extracted_data') : #Ecrit par Anaël, relu par Némo et Daniel
     
     '''
     Arguments : S : liste de tuple, assamble (optionnel) : booléen, create (optionel) : booléen, name (optionnel) : str, type : tuple ou list (par défaut tuple)
@@ -126,7 +152,7 @@ def separate(S = data_prime, types = tuple, assamble = False, create = False, na
                  f.write(s + "\n")
     return types(store)
 
-def fine(S : list, shift = False) :
+def fine(S : list, shift = False, alt = False) : #Ecrit par Anaël, relu par Némo et Daniel
     """
     
 
@@ -166,6 +192,11 @@ def fine(S : list, shift = False) :
                 L[i + 1][0] = dict_maj[L[i + 1][0]]
                 if not verr_maj :
                     I.append(i)
+        #Traitement des alt
+        if alt and S[i][0] == 'alt' and i != len(S) - 1 :
+            if L[i + 1][0] in dict_alt:
+                L[i + 1][0] = dict_alt[L[i + 1][0]]
+                I.append(i)
     
     #Supprimer les caractères indésirables
     for i in range(1, len(I) + 1) :
@@ -177,11 +208,49 @@ def fine(S : list, shift = False) :
             
     return L
 
-def fine_backspace(S : list):
+def fine_accent(S : list) : #Ecrit par Anaël
+    """
+    
+
+    Traite les accents dans une liste de tuples.
+    ATTENTION : si cette fonction est exécutée avant le traitement des majuscules, peut créer des conflits.
+    Il est recommandé de d'abord traiter les majuscules'
+
+    """
+    
+    L = []
+    n = len(S)
+    #Transtypage en liste pour la manipulation
+    for i in range(n) :
+        L.append(list(S[i]))
+        
+    I = [] #Liste d'indies à retirer
+    for i in range(n) :
+        if i != n - 1 :
+            if L[i][0] == '^' and L[i + 1][0] in dict_circ :
+                L[i + 1][0] = dict_circ[L[i + 1][0]]
+                I.append(i)
+            if L[i][0] == '¨' and L[i + 1][0] in dict_trem :
+                L[i + 1][0] = dict_trem[L[i + 1][0]]
+                I.append(i)
+            if L[i][0] == '`' and L[i + 1][0] in dict_acc_g :
+                L[i + 1][0] = dict_acc_g[L[i + 1][0]]
+                I.append(i)
+        #Retirer les caractères parasites
+    for i in range(1, len(I) + 1) :
+        L.pop(I[-1 * i])
+        
+        #Recompilation en tuples
+    for i in range(len(L)) :
+        L[i] = tuple(L[i])
+            
+    return L
+
+def fine_backspace(S : list): #Ecrit par Anaël
     """
     
     Traite les backspace dans une liste de tuples.
-    ATTENTION : il est primordiale d'avoir traité la liste avant'
+    ATTENTION : il est primordiale d'avoir traité la liste avant
 
     """
     L = []
@@ -211,7 +280,7 @@ def fine_backspace(S : list):
             
     return L
 
-def butcher_cut(S : list) :
+def butcher_cut(S : list) : #Ecrit par Anaël
     """
     
 
