@@ -7,7 +7,7 @@ path = ''
 #Contenu du fichier
 data_prime =() #Un tuple qui contient les données extraites du keylog
 #Dictionnaire de transfert
-dict_str = {'space' : ' ', '\;' : ',', 'AFK' : '\\'}
+dict_str = {'space' : ' ', 'AFK' : '\\', '\pv' : ';', '\v' : ','}
 dict_maj = {'a' : 'A', 'b' : 'B', 'c' : 'C', 'd' : 'D', 'e' : 'E', 'f' : 'F', 'g' : 'G', 'h' : 'H', 'i' : 'I', 'j' : 'J', 'k' : 'K', 'l' : 'L', 'm' : 'M', 'n' : 'N', 'o' : 'O', 'p' : 'P', 'q' : 'Q', 'r' : 'R', 's' : 'S', 't' : 'T', 'u' : 'U', 'v' : 'V', 'w' : 'W', 'x' : 'X', 'y' : 'Y', 'z' : 'Z', '<' : '>', '^' : '¨', ',' : '?', ';' : '.', ':' : '/', '!' : '§', 'ù' : '%', '$' : '€', '*' : 'µ', '&' : '1', 'é' : '2', '\g' : '3', '\a' : "4", '(' : '5', '-' : '7', 'è' : '7', '_' : '8', 'ç' : '9', 'à' : '0', ')' : '°', '=' : '+'}
 dict_alt = {'é' : '~', '\g' : '#', '\a' : '{', '(' : '[' ,'-' : '|', 'è' : '`', '_' : '//', 'à' : '@', ')' : ']', '=' : '}', 'e' : '€'}
 #dict_acc_a = {'a' : 'á', 'A' : 'Á', 'e' : 'é', 'E' : 'É', 'i' : 'í', 'I' : 'Í', 'o' : 'ó', 'O' : 'Ó'}
@@ -24,7 +24,7 @@ def ouvre_fichier(chemin = path, encodage="utf8"): ##Ecrit par Némo, relu par A
 		return open(chemin, "r", encoding=encodage)
 
 	raise ValueError("file doesn't exists")
-def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement
+def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement. Ecrit par Anaël
     """
     
     Voici une liste des fonctions utiles. Pour recevoir une description détaillée de chacune, utilise 'help()'
@@ -46,7 +46,7 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement
     print('tapez help(tutoriel)')
     
     
-def parse_CSV(chemin, encodage="utf8"):
+def parse_CSV(chemin, encodage="utf8"): #Ecrit par Némo, relu par Anaël
 	"""
 		Entrée: - chemin: string, chemin vers le fichier à ouvrir,
 							le fichier doit être au format CSV
@@ -98,11 +98,62 @@ def setpath(p : str, ex = True) : #Ecrit par Anaël, relu par Némo
     if ex :
         global data_prime
         data_prime = parse_CSV(path + '/data.csv')
+    
+def save(S, chemin = path, name = 'new_file') : #Ecrit par Anaël
+    
+    """
+    Arguments :
+        S : str ou liste de tuples. Données à sauvegarder.
+        chemin (optionnel) : str. Chemin complet où faire la sauvegarde. Par défaut le chemin de setpath
+        name (optionnel) : str. Nom du fichier créé, par défaut new_file. Pas d'inquiétudes sur les duplicata, le programme ne plantera pas si le fichier existe déjà. NE PAS AJOUTER D'EXTENSION
         
-def separate(S = data_prime, types = tuple, assamble = False, create = False, name = 'extracted_data') : #Ecrit par Anaël 
+    Permet de sauvegarder le travail de traitement en cours dans un fichier extérieur.
+    Si S est un str, la sauvegarde sera au format txt. Si c'est une liste, la sauvegarde sera au format csv' 
+    
+    ATTENTION : il peut être nécessaire d'appliquer fine sur des données extraites d'un fichier créé par save.
+    En effet, les caractères point-virgule, apostrophe et guillemet entrant en conflit avec le csv, ils sont remplacés par des alias.
+    Aucun autre traitement préalablement fait ne sera impacté (en particulier les majuscules, les alt, les backspace...)
+    """
+    
+    if type(S) == str :
+        #Si le fichier existe, rajoute (copie) au nom pour éviter les problèmes
+        if os.path.isfile(chemin + '/' + name + '.txt') :
+            save(S, chemin, name + '(copie)')
+        else :
+            with open(chemin + name + '.txt', 'x') as file :
+                None
+            with open(chemin + name + '.txt', 'w') as file :
+                file.writelines(S)
+    elif type(S) == list or tuple :
+        #Encore pour éviter les problèmes de doubles
+        if os.path.isfile(chemin + name + '.csv') :
+            save(S, chemin, name + '(copie)')
+        else :
+            with open(chemin +  name + '.csv', 'x') as file :
+                None
+            with open(chemin + name + '.csv', 'w') as file :
+                for item in S :
+                    #Tests successifs, certais caractères posant problème au csv (en particulier le point-virgule, l'apostrophe et le guillemet)
+                    if item[0] == ';' :
+                        file.write('\pv' + ';' + str(item[1]) + '\n')
+                    elif item[0] == '\"' :
+                        file.write('\g' + ';' + str(item[1]) + '\n')
+                    elif item[0] == '\'' :
+                        file.write('\a' + ';' + str(item[1]) + '\n')
+                    else :
+                        file.write(item[0] + ';' + str(item[1]) + '\n')
+    else :
+        raise ValueError('Format de données non supporté. Attendu : string ou liste de tuples')
+        
+def separate(S = data_prime, chemin = path, types = tuple, assamble = False, create = False, name = 'extracted_data') : #Ecrit par Anaël, relu par Némo et Daniel
     
     '''
-    Arguments : S : liste de tuple, assamble (optionnel) : booléen, create (optionel) : booléen, name (optionnel) : str, type : tuple ou list (par défaut tuple)
+    Arguments :
+        S : liste de tuple, 
+        chemin  (optionnel): string indiquant le dossier de travail (par défaut le chemin indiqué dans setpath)
+        assamble (optionnel) : booléen
+        create (optionel) : booléen, name (optionnel) : str
+        type (optionnel) : tuple ou list (par défaut tuple)
     
     Permet d'extraire les données de la liste S en plaçant d'un côté les str, de l'autre les temps.
     Par défaut, traîte les données directement extraites du fichier source
@@ -140,33 +191,33 @@ def separate(S = data_prime, types = tuple, assamble = False, create = False, na
         block[1] = l
         if create :
             for j in range(len(block)) :
-                with open(path + '/' + name + str(j) + '.txt', 'x') as f :
+                with open(chemin + name + str(j) + '.txt', 'x') as f :
                     f.write(block[j])
                     
         return types(block)
       
     elif create :
        for j in range(J) :
-           with open(path + '/' + name + str(j) + '.txt', 'x') as f :
+           with open(chemin + name + str(j) + '.txt', 'x') as f :
              for s in store[j] :
                  f.write(s + "\n")
     return types(store)
 
-def fine(S : list, shift = False, alt = False) :
+def fine(S : list, shift = False, alt = False) : #Ecrit par Anaël, relu par Némo et Daniel
     """
     
 
     Paramètres :
         S : liste du tuples (format similaire au fichier source)
         shift (optionnel) : booléen, par défaut False. Si spécifié, traite les majuscules
+        alt (optionnel) : booléen, par défaut False. Si spécifié, traite les alt
     
     Retourne une liste de tuple dont la partie str a été traitée pour être plus lisible.
     
-    >>>fine([(a, 1) , (b, 2) , (shift, 3), (e, 4)], shift = True)
+    >>>fine([(a, 1), (b, 2), (shift, 3), (e, 4)], shift = True)
     [(a, 1), (b, 2), (E, 4)]
 
     """
-    #Evite de modifier la liste mère (optionnel)
     L = []
     n = len(S)
     verr_maj = False #Booléen qui détecte si la majuscule est verrouillée
@@ -208,7 +259,7 @@ def fine(S : list, shift = False, alt = False) :
             
     return L
 
-def fine_accent(S : list) :
+def fine_accent(S : list) : #Ecrit par Anaël
     """
     
 
@@ -246,7 +297,7 @@ def fine_accent(S : list) :
             
     return L
 
-def fine_backspace(S : list):
+def fine_backspace(S : list): #Ecrit par Anaël
     """
     
     Traite les backspace dans une liste de tuples.
@@ -280,7 +331,7 @@ def fine_backspace(S : list):
             
     return L
 
-def butcher_cut(S : list) :
+def butcher_cut(S : list) : #Ecrit par Anaël
     """
     
 
