@@ -7,7 +7,7 @@ path = ''
 #Contenu du fichier
 data_prime =() #Un tuple qui contient les données extraites du keylog
 #Dictionnaire de transfert
-dict_str = {'space' : ' ', 'AFK' : '\\', '\pv' : ';', '\v' : ','}
+dict_str = {'space' : ' ', 'AFK' : '\\', '\pv' : ';', '/v' : ',', '/a' : '\'', '\g' : '\"'}
 dict_maj = {'a' : 'A', 'b' : 'B', 'c' : 'C', 'd' : 'D', 'e' : 'E', 'f' : 'F', 'g' : 'G', 'h' : 'H', 'i' : 'I', 'j' : 'J', 'k' : 'K', 'l' : 'L', 'm' : 'M', 'n' : 'N', 'o' : 'O', 'p' : 'P', 'q' : 'Q', 'r' : 'R', 's' : 'S', 't' : 'T', 'u' : 'U', 'v' : 'V', 'w' : 'W', 'x' : 'X', 'y' : 'Y', 'z' : 'Z', '<' : '>', '^' : '¨', ',' : '?', ';' : '.', ':' : '/', '!' : '§', 'ù' : '%', '$' : '€', '*' : 'µ', '&' : '1', 'é' : '2', '\g' : '3', '\a' : "4", '(' : '5', '-' : '7', 'è' : '7', '_' : '8', 'ç' : '9', 'à' : '0', ')' : '°', '=' : '+'}
 dict_alt = {'é' : '~', '\g' : '#', '\a' : '{', '(' : '[' ,'-' : '|', 'è' : '`', '_' : '//', 'à' : '@', ')' : ']', '=' : '}', 'e' : '€'}
 #dict_acc_a = {'a' : 'á', 'A' : 'Á', 'e' : 'é', 'E' : 'É', 'i' : 'í', 'I' : 'Í', 'o' : 'ó', 'O' : 'Ó'}
@@ -16,6 +16,7 @@ dict_trem = {'a' : 'ä', 'e' : 'ë', 'i' : 'ï', 'o' : 'ö', 'u' : 'ü', 'y' : '
 dict_circ = {'a' : 'â', 'e' : 'ê', 'i' : 'î', 'o' : 'ô', 'u' : 'û', 'A' : 'Â', 'E' : 'Ê', 'I' : 'Î', 'O' : 'Ô', 'U' : 'Û'}
 list_delete = ['space', 'ctrl', 'shift', 'alt', 'delete', 'AFK', 'verr.maj', 'tab', 'left', 'right', 'up', 'down']
 list_butcher = ['space', 'ctrl', 'shift', 'delete', 'alt', 'AFK', 'verr.maj', 'left', 'right', 'up', 'down']
+
 def ouvre_fichier(chemin = path, encodage="utf8"): ##Ecrit par Némo, relu par Anaël
 	"""Entrée: - chemin: string, chemin vers le fichier à ouvrir
 	Retourne: objet File, fichier ouvert
@@ -31,34 +32,40 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement. E
     Un numéro a été ajouté entre parenthèses : il indique l'ordre dans lequel exécuter celles-ci pour un traitement optimal
     Ne pas respecter l'ordre a de fortes chances de conduire à des conflits, toutefois, il peut parfois être nécessaire d'éviter certains traitements.
     
-    setpath (1)
-    fine (2)
-    fine_accent (3)
-    fine_backspace (4)
-    butcher_cut (5)
+    parse_CSV(*)
+    fine (1)
+    fine_accent (2)
+    fine_backspace (3)
+    butcher_cut (4)
     separate (*)
     save (*)
     
     Les fonctions marquées d'une étoile peuvent être exécutées n'importe quand
+    
+    Remarques importantes :
+        stocker le chemin du dossier de travail dans 'path' permet de ne plus avoir à spécifier le chemin aux fonctions. LE CHEMIN DOIT FINIR PAR / (ceci est valable même si le chemin est spécifié manuellement)
+        parse_CSV permet d'extraire les données stockées dans n'importe quel csv
 
     """
     
-    print('tapez help(tutoriel)')
+    print('tapez help(tutoriel), le docstring est plus agréable à lire')
     
     
-def parse_CSV(chemin, encodage="utf8"): #Ecrit par Némo, relu par Anaël
+def parse_CSV(name, chemin = path, encodage="utf8"): #Ecrit par Némo, relu par Anaël
 	"""
-		Entrée: - chemin: string, chemin vers le fichier à ouvrir,
-							le fichier doit être au format CSV
+		Entrée:
+            - name : str, nom du fichier à ouvrir, avec son extension (qui doit être csv)
+            - chemin (optionnel) : str, indique le chemin du dossier où est stocké le fichier
+            - encodage (optionnel) : str
 		Retourne: Liste de tuples au format (str, timecode)
 		 où str caractérise un caractère et timecode est un flottant
 	"""
-	fichier = ouvre_fichier(chemin, encodage)
+	fichier = ouvre_fichier(chemin + name, encodage)
 	data = []
 
 	lines = fichier.readlines()
 	for line in lines:
-		raw = line.split(",")
+		raw = line.split(";")
 
 		# Teste si la ligne contient bien 2 éléments	
 		if len(raw) <= 1:
@@ -78,34 +85,14 @@ def parse_CSV(chemin, encodage="utf8"): #Ecrit par Némo, relu par Anaël
 	fichier.close()
 	return data
 
-def setpath(p : str, ex = True) : #Ecrit par Anaël, relu par Némo
-    '''
-    Fonction qui prend en argument un string indiquant le dossier de travail.
-    Tous les fichiers manipulés et crés doivent se trouver dans ledit dossier
-    
-    Utiliser setpath est indispensable avant tout action de refine
-    
-    Si le chemin est changé en cours de travail, les fichiers devront être déplacés manuellement.
-    
-    Par défaut, setpath extrait les données du fichier. Spécifier ex = False pour éviter ceci.
-    Si les données n'ont pas été extraites une fois, le programme ne fonctionnera pas'
-
-    '''
-    
-    global path
-    path = p
-    
-    if ex :
-        global data_prime
-        data_prime = parse_CSV(path + '/data.csv')
     
 def save(S, chemin = path, name = 'new_file') : #Ecrit par Anaël
     
     """
     Arguments :
-        S : str ou liste de tuples. Données à sauvegarder.
-        chemin (optionnel) : str. Chemin complet où faire la sauvegarde. Par défaut le chemin de setpath
-        name (optionnel) : str. Nom du fichier créé, par défaut new_file. Pas d'inquiétudes sur les duplicata, le programme ne plantera pas si le fichier existe déjà. NE PAS AJOUTER D'EXTENSION
+        - S : str ou liste de tuples. Données à sauvegarder.
+        - chemin (optionnel) : str. Chemin complet où faire la sauvegarde. Par défaut le chemin de setpath
+        - name (optionnel) : str. Nom du fichier créé, par défaut new_file. Pas d'inquiétudes sur les duplicata, le programme ne plantera pas si le fichier existe déjà. NE PAS AJOUTER D'EXTENSION
         
     Permet de sauvegarder le travail de traitement en cours dans un fichier extérieur.
     Si S est un str, la sauvegarde sera au format txt. Si c'est une liste, la sauvegarde sera au format csv' 
@@ -350,7 +337,6 @@ def butcher_cut(S : list) : #Ecrit par Anaël
         L.pop(I[-1 * i])
     
     return L
-    
-        
 
-setpath('/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/')
+path = '/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/'
+print('>>> Pour recevoir de l\'aide, essayez help(tutoriel)')
