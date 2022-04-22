@@ -1,19 +1,22 @@
 from numpy import shape
 import os
+from manipule_csv import *
+
 #Globals
 
-#Chemin d'accès au fichier keylogger
-path = ''
-#Contenu du fichier
-data_prime =() #Un tuple qui contient les données extraites du keylog
-#Dictionnaire de transfert
-dict_str = {'space' : ' ', 'AFK' : '\\', '\pv' : ';', '/v' : ',', '/a' : '\'', '\g' : '\"'}
-dict_maj = {'a' : 'A', 'b' : 'B', 'c' : 'C', 'd' : 'D', 'e' : 'E', 'f' : 'F', 'g' : 'G', 'h' : 'H', 'i' : 'I', 'j' : 'J', 'k' : 'K', 'l' : 'L', 'm' : 'M', 'n' : 'N', 'o' : 'O', 'p' : 'P', 'q' : 'Q', 'r' : 'R', 's' : 'S', 't' : 'T', 'u' : 'U', 'v' : 'V', 'w' : 'W', 'x' : 'X', 'y' : 'Y', 'z' : 'Z', '<' : '>', '^' : '¨', ',' : '?', ';' : '.', ':' : '/', '!' : '§', 'ù' : '%', '$' : '€', '*' : 'µ', '&' : '1', 'é' : '2', '\g' : '3', '\a' : "4", '(' : '5', '-' : '7', 'è' : '7', '_' : '8', 'ç' : '9', 'à' : '0', ')' : '°', '=' : '+'}
-dict_alt = {'é' : '~', '\g' : '#', '\a' : '{', '(' : '[' ,'-' : '|', 'è' : '`', '_' : '//', 'à' : '@', ')' : ']', '=' : '}', 'e' : '€'}
-#dict_acc_a = {'a' : 'á', 'A' : 'Á', 'e' : 'é', 'E' : 'É', 'i' : 'í', 'I' : 'Í', 'o' : 'ó', 'O' : 'Ó'}
-dict_acc_g = {'a' : 'à', 'e' : 'è', 'u' : 'ù'}
-dict_trem = {'a' : 'ä', 'e' : 'ë', 'i' : 'ï', 'o' : 'ö', 'u' : 'ü', 'y' : 'ÿ', 'A' : 'Ä', 'E' : 'Ë', 'I' : 'Ï', 'O' : 'Ö', 'U' : 'Ü', 'Y' : 'Ÿ'}
-dict_circ = {'a' : 'â', 'e' : 'ê', 'i' : 'î', 'o' : 'ô', 'u' : 'û', 'A' : 'Â', 'E' : 'Ê', 'I' : 'Î', 'O' : 'Ô', 'U' : 'Û'}
+#Chemins utiles
+path = os.path.dirname(__file__) #Chemin courant
+dictpath = path + '/Dictionnaires'
+
+
+#Dictionnaire de transfert (les dictionnaires sont stockés en csv)
+dict_str = dict(parse_CSV(dictpath + '/dict_str.csv', separator = ';'))
+dict_maj = dict(parse_CSV(dictpath + '/dict_maj.csv', separator = ';'))
+dict_alt = dict(parse_CSV(dictpath + '/dict_alt.csv', separator = ';'))
+dict_acc_a = dict(parse_CSV(dictpath + '/dict_acc_a.csv', separator = ';'))
+dict_acc_g = dict(parse_CSV(dictpath + '/dict_acc_g.csv', separator = ';'))
+dict_trem = dict(parse_CSV(dictpath + '/dict_trem.csv', separator = ';'))
+dict_circ = dict(parse_CSV(dictpath + '/dict_circ.csv', separator = ';'))
 list_delete = ['space', 'ctrl', 'shift', 'alt', 'delete', 'AFK', 'verr.maj', 'tab', 'left', 'right', 'up', 'down']
 list_butcher = ['space', 'ctrl', 'shift', 'delete', 'alt', 'AFK', 'verr.maj', 'left', 'right', 'up', 'down']
 
@@ -32,7 +35,7 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement. E
     Un numéro a été ajouté entre parenthèses : il indique l'ordre dans lequel exécuter celles-ci pour un traitement optimal
     Ne pas respecter l'ordre a de fortes chances de conduire à des conflits, toutefois, il peut parfois être nécessaire d'éviter certains traitements.
     
-    parse_CSV(*)
+    parse_data(*)
     fine (1)
     fine_accent (2)
     fine_backspace (3)
@@ -49,42 +52,6 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement. E
     """
     
     print('tapez help(tutoriel), le docstring est plus agréable à lire')
-    
-    
-def parse_CSV(name, chemin = path, encodage="utf8"): #Ecrit par Némo, relu par Anaël
-	"""
-		Entrée:
-            - name : str, nom du fichier à ouvrir, avec son extension (qui doit être csv)
-            - chemin (optionnel) : str, indique le chemin du dossier où est stocké le fichier
-            - encodage (optionnel) : str
-		Retourne: Liste de tuples au format (str, timecode)
-		 où str caractérise un caractère et timecode est un flottant
-	"""
-	fichier = ouvre_fichier(chemin + name, encodage)
-	data = []
-
-	lines = fichier.readlines()
-	for line in lines:
-		raw = line.split(";")
-
-		# Teste si la ligne contient bien 2 éléments	
-		if len(raw) <= 1:
-			continue
-
-		# Teste si le premier caractère du second string est
-		# un nombre, permet de passer le cas du header
-		if ord(raw[1][1]) < 46 or ord(raw[1][1]) > 57:
-			continue
-
-		# Il faut retirer le caractère \n pour convertir
-		timecode = float(raw[1].replace("\n", ""))
-		item = (raw[0], timecode)
-
-		data.append(item)
-
-	fichier.close()
-	return data
-
     
 def save(S, chemin = path, name = 'new_file') : #Ecrit par Anaël
     
@@ -132,7 +99,7 @@ def save(S, chemin = path, name = 'new_file') : #Ecrit par Anaël
     else :
         raise ValueError('Format de données non supporté. Attendu : string ou liste de tuples')
         
-def separate(S = data_prime, chemin = path, types = tuple, assamble = False, create = False, name = 'extracted_data') : #Ecrit par Anaël, relu par Némo et Daniel
+def separate(S, chemin = path, types = tuple, assamble = False, create = False, name = 'extracted_data') : #Ecrit par Anaël, relu par Némo et Daniel
     
     '''
     Arguments :
