@@ -15,11 +15,14 @@ def ouvre_fichier(chemin, encodage="utf8"):
 
 	raise ValueError("file doesn't exists")
 
-def parse_CSV(chemin, encodage="utf8"):
+def parse_CSV(chemin, encodage="utf8", separator=","):
 	"""
 		Entrée: - chemin: string, chemin vers le fichier à ouvrir,
 							le fichier doit être au format CSV
-		Retourne: Liste de tuples au format (str, timecode)
+						- encodate: string, caractérise l'encodage du fichier
+						- separator: séparateur utilisé dans le fichier CSV
+
+		Retourne: Liste de listes des éléments
 		 où str caractérise un caractère et timecode est un flottant
 	"""
 	fichier = ouvre_fichier(chemin, encodage)
@@ -27,28 +30,41 @@ def parse_CSV(chemin, encodage="utf8"):
 
 	lines = fichier.readlines()
 	for line in lines:
-		raw = line.split(",")
+		raw = line.split(separator)
 
-		# Teste si la ligne contient bien 2 éléments	
-		if len(raw) <= 1:
-			continue
+		# on retire le caractère newline
+		raw[-1] = raw[-1].replace("\n", "")
 
-		# Teste si le premier caractère du second string est
-		# un nombre, permet de passer le cas du header
-		if ord(raw[1][1]) < 46 or ord(raw[1][1]) > 57:
-			continue
-
-		# Il faut retirer le caractère \n pour convertir
-		timecode = float(raw[1].replace("\n", ""))
-		item = (raw[0], timecode)
-
-		data.append(item)
+		data.append(raw)
 
 	fichier.close()
 	return data
 
-data = parse_CSV("data.csv", "utf16") # Wow ça marche
-print(parse_CSV("data.csv", "utf16")) # Wow ça marche
+def parse_data(chemin, encodage="utf8", separator=",", has_header=False):
+	"""
+		Entrée: - chemin: string, chemin vers le fichier à ouvrir qui doit être
+							un fichier CSV au format: 'valeur,timecode' avec timecode un flottant
+						- encodate: string, caractérise l'encodage du fichier
+						- separator: séparateur utilisé dans le fichier CSV
+						- has_header: booléen caractérisant la présence de header dans le fichier à ouvrir
+
+		Retourne: Liste de listes au format [str, timecode] où str caractérise un caractère et 
+							timecode est un flottant, à noter que le header est retiré de la liste
+	"""
+	data = parse_CSV(chemin, encodage, separator)
+
+	# Retire le header du fichier si le fichier en a un
+	if has_header:
+		data.pop(0)
+
+	# convertit les timecode en float
+	for i in range(len(data)):
+		data[i][1] = float(data[i][1])
+	
+	return data
+
+data = parse_data("data.csv", "utf16", has_header=True) # Wow ça marche
+print(parse_data("data.csv", "utf16", has_header=True)) # Wow ça marche
 
 def find_s(a, S):
 	"""écrit par Daniel
@@ -250,7 +266,7 @@ def plage_bis(L,S = 5):
 	return J
 
 #print(data_salomon(parse_CSV("data.csv", "utf16")))
-print(plage_bis(data_salomon(parse_CSV("data.csv", "utf16"))))
+#print(plage_bis(data_salomon(parse_CSV("data.csv", "utf16"))))
 #print(rover_mk2(["Yhtil","King","yellow"],T))
 #print(cesaretri.fusion(rover_mk2(["Yhtil","King","yellow"],T)))
 
