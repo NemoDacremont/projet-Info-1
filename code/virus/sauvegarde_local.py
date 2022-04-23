@@ -18,7 +18,7 @@ def data_to_string(data, separator=","):
 	return "\n".join(tmp)
 
 
-def sauvegarde(chemin, data):
+def sauvegarde(chemin, data, mode = 'a'):
 	""" auteur: Nemo Anael
 		Entrées: - data: string
 		Retourne: Booléen, True si la sauvegarde a réussie, False sinon
@@ -27,7 +27,7 @@ def sauvegarde(chemin, data):
 		Il faudra faire attention lors de la sauvegarde du caractère ','
 		il va falloir trouver un caractère de substitution ou un code.
 	"""
-	csv = open(chemin, "w")
+	csv = open(chemin, mode)
 	a = csv.write(data)
 	return a
 
