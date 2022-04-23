@@ -27,8 +27,8 @@ def sauvegarde(chemin, data, mode = 'a'):
 		Il faudra faire attention lors de la sauvegarde du caractère ','
 		il va falloir trouver un caractère de substitution ou un code.
 	"""
-	csv = open(chemin, mode)
-	a = csv.write(data)
-	return a
+	with open(chemin, mode) as csv :
+	   a = csv.write(data)
+	   return a
 
 

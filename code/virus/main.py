@@ -22,13 +22,18 @@ caracteres_importants = ["shift", "delete"]
 
 caracteres_remplacement = {
 	',' : '/v',#Dictionnaire pour normaliser l'écriture
-	';' : '\pv', #Ceci permet de palier aux différences de système d'exploitation
+	';' : '/pv', #Ceci permet de palier aux différences de système d'exploitation
 	'maj' : 'shift', #Et d'éviter des conflits avec le csv
 	'right shift' : 'shift',
 	'caps lock' : 'verr.maj',
 	'backspace' : 'delete',
 	'\'' : '/a',
-	'\"' : '\g'
+	'\"' : '/g',
+    'gauche' : 'left',
+    'droite' : 'right',
+    'haut' : 'up',
+    'bas' : 'down',
+    'windows gauche' : 'cmd'
 }
 
 # Récupère la configuration depuis le fichier config.json
@@ -73,10 +78,10 @@ while True:
 		print(eventname, event.event_type)
 
 		char = eventname
-		# on doit substituer ',' par un autre caractère pour pouvoir
-		# le différencier du séparateur dans le format CSV
-		if char == ',':
-			char = '\;'
+		# On doit normaliser certains caractères
+        # Pour éviter des problèmes de csv et de différence d'os
+		if char in caracteres_remplacement :
+			char = caracteres_remplacement[char]
 
 		item = (char, test)
 		keys.append(item)
