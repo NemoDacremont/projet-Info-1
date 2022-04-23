@@ -1,8 +1,10 @@
-from numpy import shape
+#Module écrit par Anaël avec l'aide des bons conseils de Nemo
+
 import os
+from numpy import shape
 from manipule_csv import *
 
-#Globals
+###Globals###
 
 #Chemins utiles
 path = os.path.dirname(__file__) #Chemin courant
@@ -20,15 +22,7 @@ dict_circ = dict(parse_CSV(dictpath + '/dict_circ.csv', separator = ';'))
 list_delete = ['space', 'ctrl', 'shift', 'alt', 'delete', 'AFK', 'verr.maj', 'tab', 'left', 'right', 'up', 'down']
 list_butcher = ['space', 'ctrl', 'shift', 'delete', 'alt', 'AFK', 'verr.maj', 'left', 'right', 'up', 'down']
 
-def ouvre_fichier(chemin = path, encodage="utf8"): ##Ecrit par Némo, relu par Anaël
-	"""Entrée: - chemin: string, chemin vers le fichier à ouvrir
-	Retourne: objet File, fichier ouvert
-    Envoie une erreur si le fichier n'éxiste pas"""
-	if os.path.exists(chemin):
-		return open(chemin, "r", encoding=encodage)
-
-	raise ValueError("file doesn't exists")
-def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement. Ecrit par Anaël
+def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement.
     """
     
     Voici une liste des fonctions utiles. Pour recevoir une description détaillée de chacune, utilise 'help()'
@@ -36,6 +30,7 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement. E
     Ne pas respecter l'ordre a de fortes chances de conduire à des conflits, toutefois, il peut parfois être nécessaire d'éviter certains traitements.
     
     parse_data(*)
+    parse_CSV(*)
     fine (1)
     fine_accent (2)
     fine_backspace (3)
@@ -46,14 +41,15 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement. E
     Les fonctions marquées d'une étoile peuvent être exécutées n'importe quand
     
     Remarques importantes :
-        stocker le chemin du dossier de travail dans 'path' permet de ne plus avoir à spécifier le chemin aux fonctions. LE CHEMIN DOIT FINIR PAR / (ceci est valable même si le chemin est spécifié manuellement)
-        parse_CSV permet d'extraire les données stockées dans n'importe quel csv
+        - Il est fortement conseillé de travailler dans le dossier où se trouve le refine.py. Dans ce cas, l'argument 'chemin' de nombreuses fonctions devient optionnel
+        - Les fonction parse_data et parse_CSV proviennent du module manipule_csv.py
+        - Pour commencer le traitement, parse_data permet d'extraire les données du fichier récolté'
 
     """
     
     print('tapez help(tutoriel), le docstring est plus agréable à lire')
     
-def save(S, chemin = path, name = 'new_file') : #Ecrit par Anaël
+def save(S, chemin = path, name = 'new_file') :
     
     """
     Arguments :
@@ -99,7 +95,7 @@ def save(S, chemin = path, name = 'new_file') : #Ecrit par Anaël
     else :
         raise ValueError('Format de données non supporté. Attendu : string ou liste de tuples')
         
-def separate(S, chemin = path, types = tuple, assamble = False, create = False, name = 'extracted_data') : #Ecrit par Anaël, relu par Némo et Daniel
+def separate(S, chemin = path, types = tuple, assamble = False, create = False, name = 'extracted_data') : #relu par Daniel
     
     '''
     Arguments :
@@ -115,6 +111,8 @@ def separate(S, chemin = path, types = tuple, assamble = False, create = False, 
     
     Si create est spécifié, stocke les données extraites dans différents fichiers txt (désactivé par défaut)
     Si un nom est spécifié, les fichiers créés prendront celui-ci
+    
+    Remarque : dans la nouvelle version, il est déconseillé d'utiliser create, mais plutôt la fonction save.'
     
     Exemples pour un fichier source [[a, 1], [b, 2], [c, 3], [d, 4], [e, 5]]
     
@@ -157,7 +155,7 @@ def separate(S, chemin = path, types = tuple, assamble = False, create = False, 
                  f.write(s + "\n")
     return types(store)
 
-def fine(S : list, shift = False, alt = False) : #Ecrit par Anaël, relu par Némo et Daniel
+def fine(S : list, shift = False, alt = False) : #Relu par Daniel
     """
     
 
@@ -213,7 +211,7 @@ def fine(S : list, shift = False, alt = False) : #Ecrit par Anaël, relu par Né
             
     return L
 
-def fine_accent(S : list) : #Ecrit par Anaël
+def fine_accent(S : list) :
     """
     
 
@@ -251,7 +249,7 @@ def fine_accent(S : list) : #Ecrit par Anaël
             
     return L
 
-def fine_backspace(S : list): #Ecrit par Anaël
+def fine_backspace(S : list): #
     """
     
     Traite les backspace dans une liste de tuples.
@@ -285,7 +283,7 @@ def fine_backspace(S : list): #Ecrit par Anaël
             
     return L
 
-def butcher_cut(S : list) : #Ecrit par Anaël
+def butcher_cut(S : list) :
     """
     
 
@@ -305,5 +303,4 @@ def butcher_cut(S : list) : #Ecrit par Anaël
     
     return L
 
-path = '/Users/anaelmarit/Documents/Prepa/Cesare_force/ngSoftware/Software/Legals/'
 print('>>> Pour recevoir de l\'aide, essayez help(tutoriel)')
