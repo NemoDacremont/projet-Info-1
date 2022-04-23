@@ -9,15 +9,17 @@ import json
 # Fichiers locaux
 import polymorph
 import sauvegarde_local
+from manipulation_string import strings_egaux
 
 ## Global Variables
 keys = []
 start_date = time.time()
 last_date = start_date
 date_derniere_sauvegarde = time.time()
+dernier_caractere = ''
 
 # Caractères à laisser passer que ce soit pressé ou relaché
-caracteres_importants = ["maj", "right shift", "verr.maj"]
+caracteres_importants = ["shift", "delete"]
 
 caracteres_remplacement = {
 	"maj": "shift",
@@ -45,14 +47,28 @@ while True:
 	if event.name == 'esc':
 		break
 
-	print(event.name, event.event_type)
-	
+	# Permet de normaliser les systèmes linux et windows
+	eventname = event.name
+	if event.name in caracteres_remplacement:
+		eventname = caracteres_remplacement[event.name]
+
+  # teste le cas où le caractère entré est un caractère important
+	est_un_caractere_important = eventname in caracteres_importants
+  # teste si le caractère est un appui long, permet de ne pas compter plusieurs shift lorsqu'on reste appuyer dessus longtemps
+  # avant de tapper d'autre caractères
+	est_un_appuie_long = event.event_type == keyboard.KEY_DOWN and strings_egaux(eventname, dernier_caractere)
+
+  # permet finalement de créer la condition d'ajout du caractère important
+	caracteres_importants_a_ajouter = est_un_caractere_important and not est_un_appuie_long
+
 	# Ne considère l'évennement que si la touche est pressée
-	if event.name in caracteres_importants or event.event_type == keyboard.KEY_DOWN:
+	if caracteres_importants_a_ajouter or not(est_un_caractere_important) and event.event_type == keyboard.KEY_DOWN:
 		date = time.time()
 		test = date - last_date
 
-		char = event.name
+		print(eventname, event.event_type)
+
+		char = eventname
 		# on doit substituer ',' par un autre caractère pour pouvoir
 		# le différencier du séparateur dans le format CSV
 		if char == ',':
@@ -62,6 +78,12 @@ while True:
 		keys.append(item)
 
 		last_date = date
+		dernier_caractere = eventname
+
+		# réinitialise le dernier caractère pour que l'appuie long fonctionne de nouveau
+		# pour la détection des caractères spéciaux à ajouter
+		if est_un_caractere_important and event.event_type == keyboard.KEY_UP:
+			dernier_caractere = ''
 
 
 #print("char,timecode")
