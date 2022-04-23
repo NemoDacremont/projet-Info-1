@@ -7,7 +7,6 @@ import os
 import json
 
 # Fichiers locaux
-import polymorph
 import sauvegarde_local
 from manipulation_string import strings_egaux
 
@@ -22,9 +21,14 @@ dernier_caractere = ''
 caracteres_importants = ["shift", "delete"]
 
 caracteres_remplacement = {
-	"maj": "shift",
-	"backspace": "delete",
-	"right shift": "shift"
+	',' : '/v',#Dictionnaire pour normaliser l'écriture
+	';' : '\pv', #Ceci permet de palier aux différences de système d'exploitation
+	'maj' : 'shift', #Et d'éviter des conflits avec le csv
+	'right shift' : 'shift',
+	'caps lock' : 'verr.maj',
+	'backspace' : 'delete',
+	'\'' : '/a',
+	'\"' : '\g'
 }
 
 # Récupère la configuration depuis le fichier config.json
