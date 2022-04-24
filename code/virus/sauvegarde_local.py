@@ -15,7 +15,8 @@ def data_to_string(data, separator=","):
 
 		tmp.append(separator.join(a))
 
-	return "\n".join(tmp)
+	# il faut rajouter une nouvelle ligne à la fin du fichier pour que cela fonctionne en utilisant le mode 'a'
+	return "\n".join(tmp) + '\n'
 
 
 def sauvegarde(chemin, data, mode = 'a'):
