@@ -7,7 +7,7 @@ from manipule_csv import *
 ###Globals###
 
 #Chemins utiles
-path = os.path.dirname(__file__) #Chemin courant
+path = os.path.dirname(__file__) + '/' #Chemin courant
 dictpath = path + '/Dictionnaires'
 
 
@@ -74,17 +74,13 @@ def save(S, chemin = path, name = 'new_file') :
             save(S, chemin, name + '(copie)')
         else :
             with open(chemin + name + '.txt', 'x') as file :
-                None
-            with open(chemin + name + '.txt', 'w') as file :
                 file.writelines(S)
-    elif type(S) == list or tuple :
+    elif type(S) == list or type(S) == tuple :
         #Encore pour éviter les problèmes de doubles
         if os.path.isfile(chemin + name + '.csv') :
             save(S, chemin, name + '(copie)')
         else :
             with open(chemin +  name + '.csv', 'x') as file :
-                None
-            with open(chemin + name + '.csv', 'w') as file :
                 for item in S :
                     #Tests successifs, certais caractères posant problème au csv (en particulier le point-virgule, l'apostrophe et le guillemet)
                     if item[0] == ';' :
@@ -127,38 +123,27 @@ def fine(S : list, shift = True, alt = True) : #Relu par Daniel
     for i in range(n) :
         #Modifier l'état majuscule verrouillée
         if L[i][0] == 'verr.maj' :
-            if verr_maj :
-                verr_maj = False
-            else :
-                verr_maj = True
+            verr_maj = not verr_maj
             I.append(i)
         #Modifier l'état majuscule enfoncée
         if L[i][0] == 'shift' :
-            if maj :
-                maj = False
-            else :
-                maj = True
+            maj = not maj
             I.append(i)
         #Modifier l'état alt enfoncé
         if L[i][0] == 'alt' :
-            if isAlt :
-                isAlt = False
-            else :
-                isAlt = True
+            isAlt = not isAlt
             I.append(i)
         #Traitement des caractères spéciaux
         if L[i][0] in dict_str :
             L[i][0] = dict_str[L[i][0]]
         #Traitement des majuscules
-        if shift and (maj != verr_maj) and i != len(S) - 1 :
-            if L[i + 1][0] in dict_maj :
-                L[i + 1][0] = dict_maj[L[i + 1][0]]
-                if not verr_maj :
-                    I.append(i)
+        if shift and (maj != verr_maj) :
+            if L[i][0] in dict_maj :
+                L[i][0] = dict_maj[L[i][0]]
         #Traitement des alt
-        if alt and isAlt and i != len(S) - 1 :
-            if L[i + 1][0] in dict_alt:
-                L[i + 1][0] = dict_alt[L[i + 1][0]]
+        if alt and isAlt :
+            if L[i][0] in dict_alt:
+                L[i][0] = dict_alt[L[i][0]]
                 I.append(i)
     
     #Supprimer les caractères indésirables
