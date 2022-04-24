@@ -18,7 +18,7 @@ date_derniere_sauvegarde = time.time()
 dernier_caractere = ''
 
 # Caractères à laisser passer que ce soit pressé ou relaché
-caracteres_importants = ["shift", "delete"]
+caracteres_importants = ["shift", "alt"]
 
 caracteres_remplacement = {
 	',' : '/v',#Dictionnaire pour normaliser l'écriture
@@ -29,11 +29,12 @@ caracteres_remplacement = {
 	'backspace' : 'delete',
 	'\'' : '/a',
 	'\"' : '/g',
-    'gauche' : 'left',
-    'droite' : 'right',
-    'haut' : 'up',
-    'bas' : 'down',
-    'windows gauche' : 'cmd'
+	'gauche' : 'left',
+	'droite' : 'right',
+	'haut' : 'up',
+	'bas' : 'down',
+	'windows gauche' : 'cmd',
+	"alt gr": "alt"
 }
 
 # Récupère la configuration depuis le fichier config.json
@@ -73,7 +74,7 @@ while True:
 	# Ne considère l'évennement que si la touche est pressée
 	if caracteres_importants_a_ajouter or not(est_un_caractere_important) and event.event_type == keyboard.KEY_DOWN:
 		date = time.time()
-		test = date - last_date
+		dt = date - last_date
 
 		print(eventname, event.event_type)
 
@@ -83,7 +84,7 @@ while True:
 		if char in caracteres_remplacement :
 			char = caracteres_remplacement[char]
 
-		item = (char, test)
+		item = (char, dt)
 		keys.append(item)
 
 		last_date = date
