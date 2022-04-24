@@ -7,8 +7,8 @@ from manipule_csv import *
 ###Globals###
 
 #Chemins utiles
-path = os.path.dirname(__file__) + '/' #Chemin courant
-dictpath = path + '/Dictionnaires'
+path = os.path.dirname(__file__) +'/' #Chemin courant
+dictpath = path + 'Dictionnaires'
 
 
 #Dictionnaire de transfert (les dictionnaires sont stockés en csv)
@@ -70,7 +70,7 @@ def save(S, chemin = path, name = 'new_file') :
     
     if type(S) == str :
         #Si le fichier existe, rajoute (copie) au nom pour éviter les problèmes
-        if os.path.isfile(chemin + '/' + name + '.txt') :
+        if os.path.isfile(chemin + name + '.txt') :
             save(S, chemin, name + '(copie)')
         else :
             with open(chemin + name + '.txt', 'x') as file :
@@ -133,9 +133,6 @@ def fine(S : list, shift = True, alt = True) : #Relu par Daniel
         if L[i][0] == 'alt' :
             isAlt = not isAlt
             I.append(i)
-        #Traitement des caractères spéciaux
-        if L[i][0] in dict_str :
-            L[i][0] = dict_str[L[i][0]]
         #Traitement des majuscules
         if shift and (maj != verr_maj) :
             if L[i][0] in dict_maj :
@@ -144,11 +141,10 @@ def fine(S : list, shift = True, alt = True) : #Relu par Daniel
         if alt and isAlt :
             if L[i][0] in dict_alt:
                 L[i][0] = dict_alt[L[i][0]]
-                I.append(i)
     
     #Supprimer les caractères indésirables
-    for i in range(1, len(I) + 1) :
-        L.pop(I[-1 * i])
+    for i in range(len(I) - 1 , -1, -1) :
+        L.pop(I[i])
         
     #Recompilation en tuples
     for i in range(len(L)) :
@@ -173,20 +169,19 @@ def fine_accent(S : list) :
         L.append(list(S[i]))
         
     I = [] #Liste d'indies à retirer
-    for i in range(n) :
-        if i != n - 1 :
-            if L[i][0] == '^' and L[i + 1][0] in dict_circ :
-                L[i + 1][0] = dict_circ[L[i + 1][0]]
-                I.append(i)
-            if L[i][0] == '¨' and L[i + 1][0] in dict_trem :
-                L[i + 1][0] = dict_trem[L[i + 1][0]]
-                I.append(i)
-            if L[i][0] == '`' and L[i + 1][0] in dict_acc_g :
-                L[i + 1][0] = dict_acc_g[L[i + 1][0]]
-                I.append(i)
+    for i in range(n - 1) :
+        if L[i][0] == '^' and L[i + 1][0] in dict_circ :
+            L[i + 1][0] = dict_circ[L[i + 1][0]]
+            I.append(i)
+        if L[i][0] == '¨' and L[i + 1][0] in dict_trem :
+            L[i + 1][0] = dict_trem[L[i + 1][0]]
+            I.append(i)
+        if L[i][0] == '`' and L[i + 1][0] in dict_acc_g :
+            L[i + 1][0] = dict_acc_g[L[i + 1][0]]
+            I.append(i)
         #Retirer les caractères parasites
-    for i in range(1, len(I) + 1) :
-        L.pop(I[-1 * i])
+    for i in range(len(I) - 1, -1, -1) :
+        L.pop(I[i])
         
         #Recompilation en tuples
     for i in range(len(L)) :
@@ -212,15 +207,14 @@ def fine_backspace(S : list): #
         if L[i][0] == 'delete' :
             I.append(i)
             j = 1
-            while j < i :
+            for j in range(1, i + 1) :
                 if i - j not in I and L[i - j][0] not in list_delete :
                     I.append(i - j)
                     break
-                j += -1
     
     #Supprimer les caractères indésirables
-    for i in range(1, len(I) + 1) :
-        print(L.pop(I[-1 * i]))
+    for i in range(len(I) -1, -1, -1) :
+        print(L.pop(I[i]))
         
     #Recompilation en tuples
     for i in range(len(L)) :
@@ -243,8 +237,8 @@ def butcher_cut(S : list) :
     for i in range(len(S)) :
         if L[i][0] in list_butcher :
             I.append(i)
-    for i in range(1, len(I) + 1) :
-        L.pop(I[-1 * i])
+    for i in range(len(I) - 1, -1, -1) :
+        L.pop(I[i])
     
     return L
 
@@ -261,7 +255,7 @@ def extract(S, n = '*') :
     Si n n'est pas spécifié', alors ressort une liste de listes dont la i-ème sous liste correspond à l'extraction du i-ème terme'
     
     extract_str([('a' , 1), ('b' , 2) , ('c' , 3)], 0)
-    >>> ['a' , 'b' , '3']
+    >>> ['a' , 'b' , 'c']
     
     """
     if type(n) == int :
@@ -285,5 +279,12 @@ def make_txt(S) :
     """
     txt = ''
     for i in range(len(S)) :
-        txt += S[i]
+        if S[i] in dict_str:
+            txt += dict_str[S[i]]
+        elif S[i] == '/pv' :
+            txt += ';'
+        elif S[i] == '/v' :
+            txt += ','
+        else :
+            txt += S[i]
     return txt

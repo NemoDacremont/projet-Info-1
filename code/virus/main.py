@@ -34,7 +34,8 @@ caracteres_remplacement = {
 	'haut' : 'up',
 	'bas' : 'down',
 	'windows gauche' : 'cmd',
-	"alt gr": "alt"
+	"alt gr": "alt",
+    "right option" : "alt"
 }
 
 # Récupère la configuration depuis le fichier config.json

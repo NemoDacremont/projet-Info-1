@@ -1,5 +1,7 @@
 import os
 
+#Module écrit par Nemo et relu par Anaël
+
 def ouvre_fichier(chemin, encodage="utf8"):
 	"""
 		Entrée: - chemin: string, chemin vers le fichier à ouvrir
@@ -22,6 +24,9 @@ def parse_CSV(chemin, encodage="utf8", separator=","):
 
 		Retourne: Liste de listes des éléments
 		 où str caractérise un caractère et timecode est un flottant
+         
+        Remarque : si la commande renvoie Error : list index out of range, essayez de mettre en argument separator = ';'.
+        Il arrive que les csv se fassent en utilisant , ou ; comme séparateur
 	"""
 	fichier = ouvre_fichier(chemin, encodage)
 	data = []
