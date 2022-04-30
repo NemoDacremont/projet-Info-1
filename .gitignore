@@ -136,3 +136,6 @@ code/virus/sauvegarde_locale.csv
 
 # IDE Daniel
 .idea/
+
+# fichiers apple
+**/.DS_Store
