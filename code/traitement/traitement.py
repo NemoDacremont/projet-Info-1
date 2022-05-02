@@ -165,7 +165,7 @@ def rover_tuple(L,M):
 	for word in L:
 		for k in range(len(M)-len(word)):
 			for i in range(len(word)):
-				if word[i] == M[k+i][0]:
+				if word[i] == M[k+i][0] or refine.dict_str[M[k+i]] == word[i]:
 					c = c+1
 					if c == len(word):
 						d = d+1
@@ -179,7 +179,7 @@ def rover_tuple(L,M):
 def plage_bis(L,S = 5):
 	"""L est une liste de string et S est le nombre de caractères renvoyé"""
 	if len(L) < S:
-		return "T'essaye quoi wesh"
+		raise ValueError("Liste trop courte")
 	J = []
 	T = ["oueap",".com",".fr"]
 	t = 0
