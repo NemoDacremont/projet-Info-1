@@ -39,7 +39,6 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement.
     butcher_cut (4)
     parse_data(*)
     parse_CSV(*)
-    separate (*)
     save (*)
     extract (*)
     make_txt (*)
@@ -247,8 +246,6 @@ def butcher_cut(S : list) :
     
     return L
 
-print('>>> Pour recevoir de l\'aide, essayez help(tutoriel)')
-
 def extract(S, n = '*') :
     """
     
@@ -306,4 +303,44 @@ def refine(S) :
     S = fine_backspace(S)
     S = butcher_cut(S)
     return S
-    
+
+def discriminate(S, temps = 10) :
+	"""
+	
+	Paramètres :
+		- S : une liste de tuples au format (str, float)
+		- temps (optionnel) : un float, par défaut 10
+	Retourne la liste S découpée selon des critères discriminants pour ensuite faciliter la recherche (diviser pour mieux régner).
+	L'idée est de subdiviser la liste de données dans laquelle on recherchera les mots de passe en repérant certains points qui permettent avec une quasi certitude de dire qu'un mot de passe n'est pas à cheval sur ce point.
+	'temps' permet de configurer la durée entre deux input à partir de laquelle on considère qu'un mot de passe ne se trouve pas entre les deux input.
+	
+	Discriminate([(a, 1), (b, 2), (tab, 2), (c, 2), (d, 10), (e, 2)])
+	>>> [[(a, 1), (b, 2)], [(c, 2)], [(d, 10), (e, 2)]]
+
+	"""
+	I = [] #Création d'une liste pour les points de jonctions
+	index = []
+	#Balayage pour repérer les jonctions
+	for i in range(len(S)) :
+		if S[i][0] == 'tab' or S[i][0] == 'enter' or S[i][0] == ' ' :
+			I.append(i)
+		elif S[i][1] >= temps :
+			I.append(i)
+			index.append((i, S[i]))
+	index = dict(index)
+	
+	L = [0 for i in range(len(I) + 1)]
+	L[0] = S[0 : I[0]]
+	for i in range(len(I) - 1) :
+		item = []
+		if I[i] in index :
+			item.append(index[I[i]])
+		item += S[I[i] + 1 : I[i + 1]]
+		L[i + 1] = item
+	item = []
+	if I[-1] in index :
+		item.append(index[I[-1]])
+	item += S[I[-1] + 1 : len(S)]
+	L[-1] = item
+	
+	return L
