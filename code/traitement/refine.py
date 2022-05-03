@@ -5,8 +5,7 @@ from numpy import shape
 from manipule_csv import *
 
 if __name__ == "__main__":
-	print(__name__)
-	print(__file__)
+	print('>>> Pour recevoir de l\'aide, essayez help(tutoriel)')
 
 ###Globals###
 
@@ -246,8 +245,6 @@ def butcher_cut(S : list) :
     
     return L
 
-print('>>> Pour recevoir de l\'aide, essayez help(tutoriel)')
-
 def extract(S, n = '*') :
     """
     
@@ -292,3 +289,14 @@ def make_txt(S) :
         else :
             txt += S[i]
     return txt
+
+def fine_str(S):
+	"""
+	"""
+
+	for i in range(len(S)):
+		if S[i][0] in dict_str:
+			S[i] = (dict_str[S[i][0]], S[i][1])
+
+	return S
+
