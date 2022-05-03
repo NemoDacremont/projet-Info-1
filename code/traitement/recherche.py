@@ -12,7 +12,7 @@ def rover_tuple(L,M):
 	for word in L:
 		for k in range(len(M)-len(word)):
 			for i in range(len(word)):
-				if word[i] == M[k+i][0] or refine.dict_str[M[k+i]] == word[i]:
+				if word[i] == M[k+i][0] or dict_str[M[k+i]] == word[i]:
 					c = c+1
 					if c == len(word):
 						d = d+1
