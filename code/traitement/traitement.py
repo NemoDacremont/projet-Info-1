@@ -1,3 +1,34 @@
+
+def brute_force(liste, liste_de_mots):
+	"""
+		Entrée: - liste: liste de tuples au format ('c', timecode) avec 'c' un caractère et timecode un float
+						- liste_de_mots: une liste de string, chaque string correspond à un mot
+
+		Retourne: un dictionnaire avec comme clef les mots trouvés et pour valeurs le nombre d'occurences
+
+		La fonction bruteforce la liste pour trouver toutes les occurences des mots contenus dans liste_de_mots
+	"""
+	mots_trouves = {}
+
+	for mot in liste_de_mots:
+		for i in range(len(liste)):
+			mot_trouve = True
+			for j in range(len(mot)):
+				if liste[i+j][0] != mot[j]:
+					mot_trouve = False
+					break
+
+			if mot_trouve:
+				if mot in mots_trouves.keys():
+					mots_trouves[mot] += 1
+				else:
+					mots_trouves[mot] = 1
+
+		return mots_trouves
+
+
+
+
 def find_s(a, S):
 	"""écrit par Daniel
 	Trouve le string a dans le string S"""
