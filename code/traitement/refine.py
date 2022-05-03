@@ -43,13 +43,15 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement.
     save (*)
     extract (*)
     make_txt (*)
+    refine(*)
     
-    Les fonctions marquées d'une étoile peuvent être exécutées n'importe quand
+    Les fonctions marquées d'une étoile peuvent être exécutées n'importe quand.
     
     Remarques importantes :
         - Il est fortement conseillé de travailler dans le dossier où se trouve le refine.py. Dans ce cas, l'argument 'chemin' de nombreuses fonctions devient optionnel
         - Les fonction parse_data et parse_CSV proviennent du module manipule_csv.py
         - Pour commencer le traitement, parse_data permet d'extraire les données du fichier récolté'
+        - La fonction refine effectue tous les traitements d'un seul coup'
 
     """
     
@@ -245,6 +247,8 @@ def butcher_cut(S : list) :
     
     return L
 
+print('>>> Pour recevoir de l\'aide, essayez help(tutoriel)')
+
 def extract(S, n = '*') :
     """
     
@@ -290,13 +294,16 @@ def make_txt(S) :
             txt += S[i]
     return txt
 
-def fine_str(S):
-	"""
-	"""
+def refine(S) :
+    """
+    
+    Prend en argument une liste de tuples, ressort une liste de tuples.
+    Effectue tous les traitements dans l'ordre, c'est-à-dire fine, fine_accent, fine_backspace et butcher_cut.
 
-	for i in range(len(S)):
-		if S[i][0] in dict_str:
-			S[i] = (dict_str[S[i][0]], S[i][1])
-
-	return S
-
+    """
+    S = fine(S)
+    S = fine_accent(S)
+    S = fine_backspace(S)
+    S = butcher_cut(S)
+    return S
+    
