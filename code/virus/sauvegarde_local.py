@@ -1,18 +1,18 @@
 
 def data_to_string(data, separator=","):
 	"""
-		Entrée: - data: au format de liste de listes correspondant à des données CSV
+		Entrée: - data: au format de liste de tuples au format 
 						- separator: string du séparateur 
 		Retourne: string au format CSV de data
 	"""
 	# liste des lignes du fichier
 	tmp = []
 	for i in range(len(data)):
-		# Stocke les données avant de les concaténées avec un séparateur
 		a = []
 		for j in range(len(data[i])):
-			a.append(str(data[i][j]))
-
+			a.append(str(j))
+		
+		# Stocke les données avant de les concaténées avec un séparateur
 		tmp.append(separator.join(a))
 
 	# il faut rajouter une nouvelle ligne à la fin du fichier pour que cela fonctionne en utilisant le mode 'a'
@@ -29,7 +29,5 @@ def sauvegarde(chemin, data, mode = 'a'):
 		il va falloir trouver un caractère de substitution ou un code.
 	"""
 	with open(chemin, mode) as csv :
-	   a = csv.write(data)
-	   return a
-
-
+		a = csv.write(data)
+		return a
