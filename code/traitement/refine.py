@@ -43,6 +43,7 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement.
     extract (*)
     make_txt (*)
     refine(*)
+	 discriminate (5)
     
     Les fonctions marquées d'une étoile peuvent être exécutées n'importe quand.
     
@@ -314,25 +315,30 @@ def discriminate(S, temps = 10) :
 	L'idée est de subdiviser la liste de données dans laquelle on recherchera les mots de passe en repérant certains points qui permettent avec une quasi certitude de dire qu'un mot de passe n'est pas à cheval sur ce point.
 	'temps' permet de configurer la durée entre deux input à partir de laquelle on considère qu'un mot de passe ne se trouve pas entre les deux input.
 	
+	Il est nécessaire d'avoir traité la liste avant ! (au minimum fine ; un traitement complet est préférable.'
+	
 	Discriminate([(a, 1), (b, 2), (tab, 2), (c, 2), (d, 10), (e, 2)])
 	>>> [[(a, 1), (b, 2)], [(c, 2)], [(d, 10), (e, 2)]]
 
 	"""
 	I = [] #Création d'une liste pour les points de jonctions
-	index = []
+	index = [] #Sera transtypé en dictionnaire ; permet d'éviter de perdre de l'info
+	#Dans le cas où le critère est le temps
+	
 	#Balayage pour repérer les jonctions
 	for i in range(len(S)) :
 		if S[i][0] == 'tab' or S[i][0] == 'enter' or S[i][0] == ' ' :
 			I.append(i)
 		elif S[i][1] >= temps :
 			I.append(i)
-			index.append((i, S[i]))
+			index.append((i, S[i])) #Stockage dans le dictionnaire
 	index = dict(index)
 	
 	L = [0 for i in range(len(I) + 1)]
 	L[0] = S[0 : I[0]]
 	for i in range(len(I) - 1) :
 		item = []
+		#Condition pour ne pas perdre de l'info
 		if I[i] in index :
 			item.append(index[I[i]])
 		item += S[I[i] + 1 : I[i + 1]]
