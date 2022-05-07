@@ -6,7 +6,7 @@ def brute_force(liste, liste_de_mots):
 
 		Retourne: un dictionnaire avec comme clef les mots trouvés et pour valeurs le nombre d'occurences
 
-		La fonction bruteforce la liste pour trouver toutes les occurences des mots contenus dans liste_de_mots
+		La fonction bruteforce parcourt la liste pour trouver toutes les occurences des mots contenus dans liste_de_mots
 	"""
 	mots_trouves = {}
 
@@ -17,12 +17,12 @@ def brute_force(liste, liste_de_mots):
 				if liste[i+j][0] != mot[j]:
 					mot_trouve = False
 					break
-
+				
 			if mot_trouve:
 				if mot in mots_trouves.keys():
-					mots_trouves[mot] += 1
+					mots_trouves[mot].append(i)
 				else:
-					mots_trouves[mot] = 1
+					mots_trouves[mot] = [i]
 
 		return mots_trouves
 
@@ -187,25 +187,25 @@ def terminator(L):
 		i = i + 1
 	return L
 
-def rover_tuple(L,M):
-	"""écrit par Daniel
-	L est une liste de string et M est une liste de tuples dont le premier indice est un string"""
-	S = []
-	c = 0
-	d = 0
-	for word in L:
-		for k in range(len(M)-len(word)):
-			for i in range(len(word)):
-				if word[i] == M[k+i][0] or refine.dict_str[M[k+i]] == word[i]:
-					c = c+1
-					if c == len(word):
-						d = d+1
-						c = 0
-			c = 0
-		S.append([word,d])
-		c = 0
-		d = 0
-	return S
+# def rover_tuple(L,M):
+# 	"""écrit par Daniel
+# 	L est une liste de string et M est une liste de tuples dont le premier indice est un string"""
+# 	S = []
+# 	c = 0
+# 	d = 0
+# 	for word in L:
+# 		for k in range(len(M)-len(word)):
+# 			for i in range(len(word)):
+# 				if word[i] == M[k+i][0] or refine.dict_str[M[k+i]] == word[i]:
+# 					c = c+1
+# 					if c == len(word):
+# 						d = d+1
+# 						c = 0
+# 			c = 0
+# 		S.append([word,d])
+# 		c = 0
+# 		d = 0
+# 	return S
 
 def plage_bis(L,S = 5):
 	"""L est une liste de string et S est le nombre de caractères renvoyé"""
