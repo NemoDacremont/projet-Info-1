@@ -1,7 +1,6 @@
 #Module écrit par Anaël avec l'aide des bons conseils de Nemo
 
 import os
-from numpy import shape
 from manipule_csv import *
 
 if __name__ == "__main__":
@@ -36,6 +35,7 @@ def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement.
     fine (1)
     fine_accent (2)
     fine_backspace (3)
+	 fine_str (*)
     butcher_cut (4)
     parse_data(*)
     parse_CSV(*)
@@ -156,6 +156,23 @@ def fine(S : list, shift = True, alt = True) : #Relu par Daniel
         L[i] = tuple(L[i])
             
     return L
+ 
+def fine_str(S) :
+	"""
+	
+	Prend en argument une liste de tuples au format (str, float).
+	Traite les caractères spéciaux (virgule, point-virgule, apostrophe, guillemet) qui sont par défaut codés différemment.
+	
+	ATTENTION : Si ces caractères sont par défaut codés de la sorte, c'est parce qu'il peuvent occasionner des bugs avec la syntaxe python et/ou avec le format csv.
+	A utiliser à vos risques et périls.
+
+	"""
+	
+	for i in range(len(S)) :
+		if S[i][0] in dict_str :
+			S[i][0] = (dict_str[S[i][0]], S[i][1])
+			
+	return S
 
 def fine_accent(S : list) :
     """
