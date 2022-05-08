@@ -34,7 +34,7 @@ caracteres_remplacement = {
 	'bas' : 'down',
 	'windows gauche' : 'cmd',
 	"alt gr": "alt",
-  	"right option" : "alt",
+  "right option" : "alt",
 	"command" : "cmd"
 }
 
