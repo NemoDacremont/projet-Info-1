@@ -50,8 +50,42 @@ def brute_force(liste, liste_de_mots):
 
 		return mots_trouves
 
-
-
+def plage(S, indices, apres, avant = 0) :
+	
+	"""
+	Arguments :
+		- S : Liste dans laquelle rechercher
+		- indices : liste d'indices à rechercher dans S. S'il n'y a qu'un indice, peut être un int
+		- apres : entier, nombre d'éléments à retourner après chaque indice ciblé
+		- avant (optionnel, par défaut 0) : entier, nombre d'éléments à retourner avant chaque indice ciblé
+			
+	Renvoie une liste des plages trouvées.
+	
+	Permet de rechercher dans une liste des plages d'éléments autour d'indices précis, avec une largeur paramétrable.
+	
+	Remarque : si tous les indices sont bien liés à des éléments de la liste, le programme peut adapter seul la taille des plages si celles-ci dépassent les capacités de la liste.
+	
+	plage([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], [1, 7], apres = 3, avant = 3)
+	>>> [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10, 11]]
+	"""
+	plages = [0 for i in range(len(indices))]
+	
+	#Permet d'utiliser un seul indice plutô qu'une liste
+	if type(indices) in [int, float] :
+		indices = [int(indices)]
+		
+	for i in range(len(indices)) :
+		debut = indices[i] - avant
+		fin = indices[i] + apres + 1
+		#Pas de risque de dépassement
+		if debut < 0 :
+			debut = 0
+		if fin > len(S) :
+			fin = len(S)
+		
+		plages[i] = S[debut : fin]
+		
+	return plages
 
 #Listes de test
 if __name__ == "__main__":
