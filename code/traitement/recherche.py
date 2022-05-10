@@ -40,9 +40,12 @@ def brute_force(liste, liste_de_mots):
 		Entrée: - liste: liste de tuples au format ('c', timecode) avec 'c' un caractère et timecode un float
 						- liste_de_mots: une liste de string, chaque string correspond à un mot
 
-		Retourne: un dictionnaire avec comme clef les mots trouvés et pour valeurs le nombre d'occurences
+		Retourne: un dictionnaire avec comme clef une contenant l'indice du premier caractère du mot de passe
 
 		La fonction bruteforce parcourt la liste pour trouver toutes les occurences des mots contenus dans liste_de_mots
+
+		>>> brute_force([['1', 1], ['2', 1], ['3', 2], ['4', 2], ['5', 1], ['6', 4]])
+		{ "123456": [1] }
 	"""
 	mots_trouves = {}
 

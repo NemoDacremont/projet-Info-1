@@ -166,11 +166,14 @@ def fine_str(S) :
 	ATTENTION : Si ces caractères sont par défaut codés de la sorte, c'est parce qu'il peuvent occasionner des bugs avec la syntaxe python et/ou avec le format csv.
 	A utiliser à vos risques et périls.
 
+	>>>fine_str([['l', 1], ['\a', 2]])
+	[['l', 1], ["'", 2]]
+
 	"""
 	
 	for i in range(len(S)) :
 		if S[i][0] in dict_str :
-			S[i][0] = (dict_str[S[i][0]], S[i][1])
+			S[i] = (dict_str[S[i][0]], S[i][1])
 			
 	return S
 
@@ -236,7 +239,7 @@ def fine_backspace(S : list): #
     
     #Supprimer les caractères indésirables
     for i in range(len(I) -1, -1, -1) :
-        print(L.pop(I[i]))
+        L.pop(I[i])
         
     #Recompilation en tuples
     for i in range(len(L)) :
