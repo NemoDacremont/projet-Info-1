@@ -134,6 +134,10 @@ code/server/src/routes/test1/
 code/server/src/routes/tmp.zip
 code/virus/sauvegarde_locale.csv
 
+# dossier data du traitement
+code/traitement/data/
+code/traitement/tmp.zip
+
 # IDE Daniel
 .idea/
 
