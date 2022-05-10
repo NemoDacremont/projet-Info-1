@@ -21,14 +21,14 @@ def ouvre_fichier(chemin, encodage="utf8"):
 def parse_CSV(chemin, encodage="utf8", separator=","):
 	"""
 		Entrée: - chemin: string, chemin vers un fichier ou un dossier,
- 								Si fichier: le fichier doit être au format CSV
+							Si fichier: le fichier doit être au format CSV
 								Si dossier: les fichiers qu'il contient doivent être au format CSV
 						- encodate: string, caractérise l'encodage du fichier
 						- separator: séparateur utilisé dans le fichier CSV
 
 		Retourne: Liste de listes au format [[str, timecode],..., [str, timecode]]
-		 					où str caractérise un caractère et timecode est un flottant
-         
+							où str caractérise un caractère et timecode est un flottant
+        
         Remarque : si la commande renvoie Error : list index out of range, essayez de mettre en argument separator = ';'.
         Il arrive que les csv se fassent en utilisant , ou ; comme séparateur
 	"""
