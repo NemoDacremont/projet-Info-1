@@ -1,4 +1,6 @@
 
+import os
+
 def data_to_string(data, separator=","):
 	"""
 		Entrée: - data: au format de liste de tuples au format 
@@ -28,6 +30,11 @@ def sauvegarde(chemin, data, mode = 'a'):
 		Il faudra faire attention lors de la sauvegarde du caractère ','
 		il va falloir trouver un caractère de substitution ou un code.
 	"""
+	if not os.path.exists(chemin):
+		f = open(chemin, "x")
+		f.close()
+
+
 	with open(chemin, mode) as csv :
 		a = csv.write(data)
 		return a

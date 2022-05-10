@@ -8,7 +8,7 @@ import json
 import threading
 
 # Fichiers locaux
-import sauvegarde_local
+import sauvegarde_locale
 from manipulation_string import strings_egaux
 import envoie_donnees
 
@@ -93,7 +93,7 @@ def main():
 				char = caracteres_remplacement[char]
 
 			line = f"{char},{dt}\n"
-			sauvegarde_local.sauvegarde(chemin_sauvegarde, line)
+			sauvegarde_locale.sauvegarde(chemin_sauvegarde, line)
 			#keys.append(item)
 
 			last_date = date
@@ -123,13 +123,3 @@ if __name__ == '__main__':
 	envoie_thread.start()
 
 	print("Threads started")
-
-#print("char,timecode")
-#for el in keys:
-#	print(f"{el[0]},{el[1]}")
-
-
-#print("sauvegarde vers", chemin_sauvegarde)
-#a_ecrire = sauvegarde_local.data_to_string(keys)
-#sauvegarde_local.sauvegarde(chemin_sauvegarde, a_ecrire)
-
