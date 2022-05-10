@@ -88,10 +88,10 @@ def parse_data(chemin, encodage="utf8", separator=",", has_header=False):
 	
 	return data
 
-def download_from_server(ip):
+def download_from_server(ip, destination="data"):
 	## Récupère le fichier zip du serveur et le stocke dans le fichier tmp.zip
 	chemin_fichier_zip = f"{os.path.dirname(__file__)}/tmp.zip"
-	chemin_final = f"{os.path.dirname(__file__)}/data"
+	chemin_final = f"{os.path.dirname(__file__)}/" + destination
 	fichier_zip = open(chemin_fichier_zip, "wb+")
 
 	requete_zip = requests.get(f"http://{ip}/telecharge")
