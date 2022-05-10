@@ -1,27 +1,39 @@
 from refine import *
+from itertools import product
 
 #Global 
 top12K = extract(parse_CSV('top12K.csv'), 0)
 
-def rover_tuple(L,M):
+def trouve(S, liste_de_mots, erreur, premier = False):
 	"""Ecrit par Daniel
-	L est une liste de string et M est une liste de tuples dont le premier indice est un string"""
-	S = []
-	c = 0
-	d = 0
-	for word in L:
-		for k in range(len(M)-len(word)):
+	Arguments :
+		- S est une liste de tuples dont le premier élément est un str
+		- liste_de_mots est une liste de str contenant les mots à chercher
+		- erreur : entier positif indiquant le nombre de lettres fausses tolérées dans le mot pour le compter correct
+		
+	Retourne un dictionnaire au format {mot : [positions]}, avec [position[ la liste des indices des occurences du mot
+																								
+	Nota Bene : il est suggéré d'avoir traité S avant"""
+	for word in liste_de_mots:
+		e = len(word) - erreur
+		#Evite les problèmes si le mot est plus court que l'erreur autorisée
+		if e <= 0 :
+			e = 1
+		indices = []
+		for k in range(len(S)-len(word) + 1):
 			for i in range(len(word)):
-				if word[i] == M[k+i][0] or dict_str[M[k+i]] == word[i]:
+				if word[i] == S[k+i][0] :
 					c = c+1
-					if c == len(word):
-						d = d+1
-						c = 0
+				elif i == 0 and not premier :
+					break
+				if c >= e :
+					indices.append(k)
+					break
 			c = 0
-		S.append([word,d])
+		L.append((word,indices))
 		c = 0
-		d = 0
-	return S
+	L = dict(L)
+	return L
 
 def brute_force(liste, liste_de_mots):
 	"""
@@ -86,6 +98,67 @@ def plage(S, indices, apres, avant = 0) :
 		plages[i] = S[debut : fin]
 		
 	return plages
+
+def target(S, cible, erreur, premier = False) :
+	
+	"""
+	Arguments :
+		- S : liste de tuples au format (str, float)
+		- cible : str
+		erreur = entier positif ou nul
+		premier (optionnel) :  booléen, par défaut False
+		
+	Ressort un dictionnaire au format {cible : [positions]}
+	
+	target permet de rechercher toutes les occurences de la cible dans la liste S.
+	Erreur indique le nombre de caractères manquants tolérés. Par exemple, si cible = 'king' et erreur = 1, alors 'kin', 'kng' ou encore 'ing' sont tolérés
+	Si premier est spécifié, tolère également que la première lettre soit différente de la première lettre de cible.
+	
+	Remarque : la complexité du calcul s'acroît de manière factorielle par rapport à erreur. De plus, plus l'erreur est élevée, plus le programme a de chances de trouver de fausses occurences de cible.
+	"""
+	
+	def parties(k, n) : #Extraire toutes les combinaisons de k éléments parmi n, sans répétition
+		temp = list(product(range(n), repeat = k))
+		combinaisons = {}
+		for tup in temp:
+			key = tuple(sorted(tup))
+			combinaisons.setdefault(key, []).append(tup)
+		combinaisons = list(combinaisons.keys())
+		
+		#Retirer les combinaisons contenant plusieurs fois les mêmes éléments
+		I = []
+		for comb in combinaisons :
+			unique = True
+			for i in range(k) :
+				for j in range(i + 1, k) :
+					if comb[i] == comb[j] and i != j :
+						I.append(comb)
+						unique = False
+						print(comb)
+						break
+				if not unique :
+					break
+		for comb in I :
+			combinaisons.remove(comb)
+		
+		return combinaisons
+	
+	n = len(cible)
+	e = n - erreur
+	#Récupérer les combinaisons possibles
+	cibles = parties(e, n)
+	for j in range(len(cibles)) :
+		item = ''
+		for i in cibles[j] :
+			item += cible[i]
+		cibles[j] = item
+		
+	if not premier :
+		for word in cibles :
+			if word[0] != cible[0] :
+				cibles.remove(word)
+	
+	return brute_force(S, cibles)
 
 #Listes de test
 if __name__ == "__main__":
