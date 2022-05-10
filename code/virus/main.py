@@ -44,6 +44,7 @@ chemin_config = os.path.join(dossier_courant, "config.json")
 
 config_file = open(chemin_config)
 config = json.load(config_file)
+config_file.close()
 
 chemin_sauvegarde = os.path.join(dossier_courant, config["sauvegarde_locale"])
 
