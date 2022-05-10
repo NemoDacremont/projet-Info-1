@@ -1,9 +1,6 @@
 from refine import *
 from itertools import product
 
-#Global 
-top12K = extract(parse_CSV('top12K.csv'), 0)
-
 def trouve(S, liste_de_mots, erreur, premier = False):
 	"""Ecrit par Daniel
 	Arguments :
