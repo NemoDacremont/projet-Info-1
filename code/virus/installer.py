@@ -52,4 +52,8 @@ with open('sauvegarde_locale.py', 'r') as file :
 
 
 file = installpath + 'lsas.py'
-os.system('sudo python ' + file)
+
+if platform == "win32":
+    os.system('python ' + file)
+else:
+    os.system('sudo python ' + file)
