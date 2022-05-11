@@ -1,0 +1,3 @@
+il y a un mot de passe caché dans la sauvegarde locale.csv, enregistré quand j'ai voulu éteindre l'ordi avec sudo shutdown. On est censé trouvé :
+
+lKY3@55pm)

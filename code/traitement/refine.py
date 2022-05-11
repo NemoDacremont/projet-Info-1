@@ -2,6 +2,7 @@
 
 import os
 from manipule_csv import *
+from fusion import fusion
 
 if __name__ == "__main__":
 	print('>>> Pour recevoir de l\'aide, essayez help(tutoriel)')
@@ -236,7 +237,8 @@ def fine_backspace(S : list): #
                 if i - j not in I and L[i - j][0] not in list_delete :
                     I.append(i - j)
                     break
-    
+  
+    I = fusion(I)
     #Supprimer les caractères indésirables
     for i in range(len(I) -1, -1, -1) :
         L.pop(I[i])

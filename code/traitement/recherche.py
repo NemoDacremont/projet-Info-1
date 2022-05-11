@@ -117,37 +117,26 @@ def target(S, cible, erreur, premier = False) :
 	Remarque : la complexité du calcul s'acroît de manière factorielle par rapport à erreur. De plus, plus l'erreur est élevée, plus le programme a de chances de trouver de fausses occurences de cible.
 	"""
 	
-	def parties(k, n) : #Extraire toutes les combinaisons de k éléments parmi n, sans répétition
-		temp = list(product(range(n), repeat = k))
-		combinaisons = {}
-		for tup in temp:
-			key = tuple(sorted(tup))
-			combinaisons.setdefault(key, []).append(tup)
-		combinaisons = list(combinaisons.keys())
-		
-		#Retirer les combinaisons contenant plusieurs fois les mêmes éléments
-		I = []
-		for comb in combinaisons :
-			unique = True
-			for i in range(k) :
-				for j in range(i + 1, k) :
-					if comb[i] == comb[j] and i != j :
-						I.append(comb)
-						unique = False
-						print(comb)
-						break
-				if not unique :
-					break
-		for comb in I :
-			combinaisons.remove(comb)
-		
-		return combinaisons
+	def combinaisons(k, n) : #Extraire toutes les combinaisons de k éléments parmi n, sans répétition
+		if k == 0:
+			return[[]]
+		elif k == 1 :
+			L = [[i] for i in range(0, n)]
+			return L
+		elif k == n:
+			return [list(range(0, n))]
+		else :
+			L1 = combinaisons(k - 1, n - 1)
+			for i in range(len(L1)) :
+				L1[i] = L1[i] + [n - 1]
+			return L1 + combinaisons(k, n - 1)
 	
 	n = len(cible)
 	e = n - erreur
 	#Récupérer les combinaisons possibles
-	cibles = parties(e, n)
-	for j in range(len(cibles)) :
+	cibles = combinaisons(e, n)
+	n = len(cibles)
+	for j in range(n):
 		item = ''
 		for i in cibles[j] :
 			item += cible[i]
@@ -157,12 +146,14 @@ def target(S, cible, erreur, premier = False) :
 		for word in cibles :
 			if word[0] != cible[0] :
 				cibles.remove(word)
+	print(cibles)
 	
 	return brute_force(S, cibles)
 
 #Listes de test
 if __name__ == "__main__":
 	S = parse_data('sauvegarde_locale.csv')
+	S = fine_str(S)
 	S = fine(S)
 	S = fine_accent(S)
-	S = fine_backspace(S)
+	#
