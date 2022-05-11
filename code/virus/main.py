@@ -111,6 +111,9 @@ def thread_envoie(dt=20):
 									correspond à une durée en secondes.
 	"""
 	while True:
+		if not os.path.exists(chemin_sauvegarde):
+			open(chemin_sauvegarde, 'x').close()
+
 		with open(chemin_sauvegarde, "r+") as fichier_sauvegarde:
 			data = fichier_sauvegarde.read()
 			envoie_donnees.envoie(config["url"], data)
@@ -122,5 +125,3 @@ if __name__ == '__main__':
 	envoie_thread = threading.Thread(target=thread_envoie)
 	main_thread.start()
 	envoie_thread.start()
-
-	print("Threads started")
