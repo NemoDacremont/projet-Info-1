@@ -1,3 +1,27 @@
-il y a un mot de passe caché dans la sauvegarde locale.csv, enregistré quand j'ai voulu éteindre l'ordi avec sudo shutdown. On est censé trouvé :
+Phase 1 : Keylog (Nemo)
+
+- Installateur du virus + activation (montrer la création des dossiers)
+- Démonstration du keylog en créant un court échantillon
+- Démonstration du serveur + réception des fichiers
+- présentation des fichiers reçus
+
+Phase 2 : Traitement (Anaël)
+
+- traitement de l'échantillon créé (refine.refine)
+- exportation en txt lisible pour la présentation (refine.save)
+
+Phase 3 : Crackage du mot de passe
+
+-> passage à l'échantillon massif créé à l'avance. Il y a un mot de passe caché dans la sauvegarde locale.csv, enregistré quand j'ai voulu éteindre l'ordi avec sudo shutdown. On est censé trouvé :
 
 lKY3@55pm)
+
+- traitement rapide de l'échantillon (démonstration d'efficacité)
+- recherche naïve (brute force) -> a-priori ne renverra rien
+- recherche ciblée (target)
+-> target(S, 'sudo', erreur = 0)
+>>> Renvoie un dictionnaire avec la position du sudo
+-> plage (prévoir au moins 40 de marge
+>>> Renvoie un fraction de l'échantillon, courte et contenant le mot de passe
+-> exportation en txt
+-> lecture du mot de passe

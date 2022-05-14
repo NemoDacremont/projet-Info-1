@@ -1,5 +1,3 @@
-from random import randint
-
 def fusion(L) :
     
     def merge(l, m): #Sous programme fusionnant deux listes triées
@@ -45,5 +43,3 @@ def fusion(L) :
     X = L[0 : int(len(L) / 2)]
     Y = L[int(len(L) / 2) : -1] + [L[-1]]
     return(forge(X, Y))
- 
-P = [randint(1, 100000) for i in range(100000)]
