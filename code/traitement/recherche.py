@@ -1,5 +1,4 @@
 from refine import *
-from itertools import product
 
 def trouve(S, liste_de_mots, erreur, premier = False):
 	"""Ecrit par Daniel
@@ -105,8 +104,8 @@ def target(S, cible, erreur, premier = False) :
 	Arguments :
 		- S : liste de tuples au format (str, float)
 		- cible : str
-		erreur = entier positif ou nul
-		premier (optionnel) :  booléen, par défaut False
+		- erreur = entier positif ou nul
+		- premier (optionnel) :  booléen, par défaut False
 		
 	Ressort un dictionnaire au format {cible : [positions]}
 	
