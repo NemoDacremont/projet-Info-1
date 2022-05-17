@@ -40,6 +40,36 @@ def fusion(L) :
     
     if len(L) == 0 :
 	    return L
-    X = L[0 : int(len(L) / 2)]
-    Y = L[int(len(L) / 2) : -1] + [L[-1]]
+    X = L[0 : len(L) // 2]
+    Y = L[len(L) // 2 : -1] + [L[-1]]
     return(forge(X, Y))
+ 
+def fusion_bis(L) :
+	def merge(L1, L2) :
+		def aux(a, b, c) :
+			if a == [] :
+				return c + b
+			elif b == [] :
+				return c + a
+			else :
+				if a[0] < b[0] :
+					c.append(a.pop(0))
+					return aux(a, b, c)
+				else :
+					c.append(b.pop(0))
+					return aux(a, b, c)
+		return aux(L1, L2, [])
+	if len(L) <= 1 :
+		return L
+	else :
+		L1 = fusion_bis(L[0 : len(L) // 2])
+		L2 = fusion_bis(L[len(L) // 2 : len(L)])
+		return merge(L1, L2)
+
+#Partie de test
+if __name__ == "__main__" :
+	from random import randint
+	P = [randint(0, 100000) for i in range(100000)]
+	Q = [randint(0, 1000000) for i in range(1000000)]
+	#fusion_bis ne peut pas trier ces listes en général
+	#fusion le peut ; nous l'avons gardée malgré sa syntaxe curieuse
