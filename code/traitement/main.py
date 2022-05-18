@@ -6,7 +6,6 @@ import json
 # Importation des fichiers locaux
 import refine
 import manipule_csv
-import traitement
 import recherche
 
 dossier_courant = os.path.dirname(__file__)
@@ -30,4 +29,5 @@ csv = refine.fine_accent(csv)
 csv = refine.fine_backspace(csv)
 csv = refine.fine_str(csv)
 
-print(recherche.brute_force(csv, liste_des_mdp))
+#print(recherche.brute_force(csv, liste_des_mdp))
+
