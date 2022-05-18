@@ -15,7 +15,7 @@ dictpath = path + 'Dictionnaires'
 
 
 #Dictionnaire de transfert (les dictionnaires sont stockés en csv)
-dict_str = dict(parse_CSV(dictpath + '/dict_str.csv', separator = ';'))
+dict_str = dict(parse_CSV(dictpath + '/dict_str.csv', separator = '@'))
 dict_maj = dict(parse_CSV(dictpath + '/dict_maj.csv', separator = ';'))
 dict_alt = dict(parse_CSV(dictpath + '/dict_alt.csv', separator = ';'))
 dict_acc_a = dict(parse_CSV(dictpath + '/dict_acc_a.csv', separator = ';'))
@@ -23,7 +23,7 @@ dict_acc_g = dict(parse_CSV(dictpath + '/dict_acc_g.csv', separator = ';'))
 dict_trem = dict(parse_CSV(dictpath + '/dict_trem.csv', separator = ';'))
 dict_circ = dict(parse_CSV(dictpath + '/dict_circ.csv', separator = ';'))
 list_delete = ['space', 'ctrl', 'shift', 'alt', 'delete', 'AFK', 'verr.maj', 'tab', 'left', 'right', 'up', 'down', 'command']
-list_butcher = ['space', 'ctrl', 'shift', 'delete', 'alt', 'AFK', 'verr.maj', 'left', 'right', 'up', 'down', 'command']
+list_butcher = ['space', 'ctrl', 'shift', 'delete', 'alt', 'AFK', 'verr.maj', 'left', 'right', 'up', 'down', 'command', 'windows', 'enter']
 
 def tutoriel() : #Fonction qui fournit la marche à suivre pour le traitement.
     """

@@ -146,7 +146,6 @@ def target(S, cible, erreur, premier = False) :
 		for word in cibles :
 			if word[0] != cible[0] :
 				cibles.remove(word)
-	print(cibles)
 	
 	return brute_force(S, cibles)
 

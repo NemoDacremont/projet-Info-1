@@ -93,6 +93,8 @@ def main():
 			if char in caracteres_remplacement :
 				char = caracteres_remplacement[char]
 
+			char.encode("utf8")
+
 			line = f"{char},{dt}\n"
 			sauvegarde_locale.sauvegarde(chemin_sauvegarde, line)
 			#keys.append(item)

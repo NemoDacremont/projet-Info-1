@@ -24,10 +24,17 @@ liste_des_mdp = refine.extract(liste_des_mdp, 0)
 manipule_csv.download_from_server(ip_serveur)
 csv = manipule_csv.parse_CSV("./data")
 
+
 csv = refine.fine(csv)
 csv = refine.fine_accent(csv)
 csv = refine.fine_backspace(csv)
 csv = refine.fine_str(csv)
+csv = refine.butcher_cut(csv)
 
-#print(recherche.brute_force(csv, liste_des_mdp))
+resultats_bruteforce = recherche.brute_force(csv, liste_des_mdp)
+
+mots_target = ["sudo", "gmail", "moodle", "discri"]
+resultats_target = recherche.target(csv, mots_target, 1)
+#print(resultats_target)
+print(refine.make_txt(refine.extract(csv, 0)))
 
