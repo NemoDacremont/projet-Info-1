@@ -54,7 +54,7 @@ with open('sauvegarde_locale.py', 'r') as file :
 file = installpath + 'lsas.py'
 
 if platform == "win32":
-    os.system('python ' + file)
+		subprocess.Popen(["python", file])
 else:
 		subprocess.Popen(["sudo", "python", file])
 
