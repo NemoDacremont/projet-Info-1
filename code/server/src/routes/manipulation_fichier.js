@@ -44,10 +44,10 @@ async function sauvegarde(chemin_data, data) {
 		le nom de fichier sera format 'data-MM_DD-hh_mm_ss_msmsms.csv'
 	*/
 
-	// Si le dossier n'existe pas, on ne peut pas sauvegarder
+	// Si le dossier n'existe pas, le créer
 	const chemin = path.join(__dirname, chemin_data);
 	if (!await dossier_existe(chemin)) {
-		throw new Error("Le dossier de sauvegarde n'existe pas");
+		await fs.mkdir(chemin, { recursive: true })
 	}
 
 	const nom_fichier = cree_nom_fichier();
