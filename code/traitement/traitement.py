@@ -98,3 +98,24 @@ def big_plage(L,F = 5,S = 5):
 			for k in range(J[i][2]-(F+size-1),J[i][2]+(S+1)):
 				P[i].append(L[k][0])
 	return P
+
+def casse(M,e = 7):
+	L = []
+	def bibli(S,b):
+		item = []
+		if b == len(S):
+			return []
+		for k in range(b+1,len(S)-1):
+			item.append([b] + bibli(S,k))
+		return item
+	for word in M:
+		for i in range(len(word)-e):
+			L.append(bibli(word,i))
+	return L
+
+def affichage_propre(M):
+	for i in M:
+		print(i)
+
+print(casse(["facebook"]))
+affichage_propre(casse(["facebook"]))
